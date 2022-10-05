@@ -11,8 +11,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Zarf
         uses: ./ # Uses an action in the root directory
-        id: setup-zarf
         # with:
           # version: ''
+      - name: Check Zarf Version
         run: |
           zarf version
