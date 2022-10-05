@@ -9,7 +9,9 @@ async function setup() {
 
     // Download the specific version of zarf
     const download = getZarfBinary(version);
-    const pathToBinary = await tc.downloadTool(download.url, '/usr/local/bin/zarf');
+    const pathToBinary = await tc.downloadTool(download.url);
+
+    core.warning(pathToBinary)
 
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
