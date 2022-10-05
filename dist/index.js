@@ -16,7 +16,6 @@ async function setup() {
     // Download the specific version of zarf
     const download = getZarfBinary(version);
     const pathToBinary = await tc.downloadTool(download.url);
-    console.log(pathToBinary)
 
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
@@ -57,12 +56,9 @@ function mapOS(os) {
 
 function getZarfBinary(version) {
   const platform = os.platform();
-  console.log(platform)
   const filename = `zarf_${ version }_${ mapOS(platform) }_${ mapArch(os.arch()) }`;
-  console.log(filename)
   // const binPath = path.join(filename, 'bin');
   const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
-  console.log(url)
   return {
     url,
     // binPath
