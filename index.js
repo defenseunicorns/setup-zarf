@@ -7,11 +7,12 @@ async function setup() {
     // Get version of tool to be installed
     const version = core.getInput('version');
 
-    // Download the specific version of the tool, e.g. as a tarball
+    // Download the specific version of zarf
     const download = getZarfBinary(version);
     const pathToBinary = await tc.downloadTool(download.url);
+    console.log(pathToBinary)
 
-    // Expose the tool by adding it to the PATH
+    // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
   } catch (e) {
     core.setFailed(e);
