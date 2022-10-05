@@ -1,7 +1,7 @@
 on: [push]
 
 jobs:
-  hello_world_job:
+  install_zarf:
     runs-on: ubuntu-latest
     name: A job to install Zarf
     steps:
