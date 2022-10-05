@@ -19,8 +19,7 @@ async function setup() {
     const download = getZarfBinary(version);
     const pathToBinary = await tc.downloadTool(download.url);
 
-    core.info(pathToBinary)
-    core.info(download.url)
+    core.info('Testing...')
 
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
