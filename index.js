@@ -1,15 +1,24 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
+const tc = require('@actions/tool-cache');
+const { getZarfBinary } = require('./lib/utils');
 
-try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
-} catch (error) {
-  core.setFailed(error.message);
+async function setup() {
+  try {
+    // Get version of tool to be installed
+    const version = core.getInput('version');
+
+    // Download the specific version of the tool, e.g. as a tarball
+    const download = getZarfBinary(version);
+    const pathToTarball = await tc.downloadTool(download.url);
+
+    // Extract the tarball onto the runner
+    const pathToCLI = await tc.extractTar(pathToTarball);
+
+    // Expose the tool by adding it to the PATH
+    core.addPath(path.join(pathToCLI,download.binPath));
+  } catch (e) {
+    core.setFailed(e);
+  }
 }
+
+module.exports = setup
