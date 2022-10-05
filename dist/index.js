@@ -10,12 +10,17 @@ const { getZarfBinary } = __nccwpck_require__(6760);
 
 async function setup() {
   try {
+    core.debug('Inside try block');
+
     // Get version of tool to be installed
     const version = core.getInput('version');
 
     // Download the specific version of zarf
     const download = getZarfBinary(version);
     const pathToBinary = await tc.downloadTool(download.url);
+
+    core.info(pathToBinary)
+    core.info(download.url)
 
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
