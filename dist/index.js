@@ -15,13 +15,10 @@ async function setup() {
 
     // Download the specific version of the tool, e.g. as a tarball
     const download = getZarfBinary(version);
-    const pathToTarball = await tc.downloadTool(download.url);
-
-    // Extract the tarball onto the runner
-    const pathToCLI = await tc.extractTar(pathToTarball);
+    const pathToBinary = await tc.downloadTool(download.url);
 
     // Expose the tool by adding it to the PATH
-    core.addPath(pathToCLI);
+    core.addPath(pathToBinary);
   } catch (e) {
     core.setFailed(e);
   }
@@ -60,12 +57,11 @@ function mapOS(os) {
 function getZarfBinary(version) {
   const platform = os.platform();
   const filename = `zarf_${ version }_${ mapOS(platform) }_${ mapArch(os.arch()) }`;
-  const extension = 'tar.gz';
-  const binPath = path.join(filename, 'bin');
-  const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }.${ extension }`;
+  // const binPath = path.join(filename, 'bin');
+  const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
   return {
     url,
-    binPath
+    // binPath
   };
 }
 
