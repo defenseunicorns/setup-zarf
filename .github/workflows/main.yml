@@ -17,4 +17,4 @@ jobs:
           # version: ''
       - name: Check Zarf Version
         run: |
-          zarf_v0.21.3_Linux_amd64 version
+          zarf version
