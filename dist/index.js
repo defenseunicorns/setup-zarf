@@ -19,8 +19,8 @@ async function setup() {
 
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
-  } catch (e) {
-    core.setFailed(e);
+  } catch (err) {
+    core.setFailed(err);
   }
 }
 
