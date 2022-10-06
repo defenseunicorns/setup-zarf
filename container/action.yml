@@ -1,0 +1,9 @@
+name: 'Setup Zarf'
+description: 'GitHub Action for installing Zarf'
+inputs:
+  args:
+    description: 'Arguments for the Zarf command'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

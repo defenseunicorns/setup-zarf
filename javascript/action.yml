@@ -1,5 +1,5 @@
 name: 'Setup Zarf'
-description: 'Install Zarf'
+description: 'GitHub Action for installing Zarf'
 inputs:
   version:  # id of input
     description: 'The Version of Zarf to Install'
