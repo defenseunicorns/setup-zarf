@@ -10,10 +10,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: 'setup-zarf'
-          
+
       - name: Install Zarf
         uses: ./container # Uses an action in the container directory
-
-      - name: Check Zarf Version
-        run: |
-          zarf version
+        with:
+          args: version
