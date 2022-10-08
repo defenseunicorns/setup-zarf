@@ -6770,7 +6770,7 @@ async function setup() {
     core.debug(checkForZarf);
 
     // Execute the zarf binary
-    await exec.exec(`"${downloadPath}"`);
+    await exec.exec(`zarf`);
 
   } catch (err) {
     core.setFailed(err);
