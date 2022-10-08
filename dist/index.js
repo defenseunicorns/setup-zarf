@@ -1,48 +1,6 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 6238:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const core = __nccwpck_require__(6024);
-const tc = __nccwpck_require__(3594);
-const exec = __nccwpck_require__(2423)
-const io = __nccwpck_require__(6202)
-const { getZarfBinary } = __nccwpck_require__(6760);
-
-async function setup() {
-  try {
-    // Get version of zarf to be installed
-    const version = core.getInput('version');
-
-    // Download the specific version of zarf
-    const download = getZarfBinary(version);
-    const pathToBinary = await tc.downloadTool(download.url);
-
-    // Debugging. Need to remove when finished
-    core.debug(pathToBinary);
-
-    // Expose the zarf binary by adding it to the PATH
-    core.addPath(pathToBinary);
-
-    // Get the path to the zarf binary
-    const zarfPath = await io.which('zarf', true);
-
-    // Debugging. Need to remove when finished
-    core.debug(zarfPath);
-
-    // Execute the zarf binary
-    await exec.exec(`"${zarfPath}"`);
-
-  } catch (err) {
-    core.setFailed(err);
-  }
-}
-
-module.exports = setup
-
-/***/ }),
-
 /***/ 6760:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -6782,13 +6740,48 @@ module.exports = require("util");
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(6238);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+const core = __nccwpck_require__(6024);
+const tc = __nccwpck_require__(3594);
+const exec = __nccwpck_require__(2423)
+const io = __nccwpck_require__(6202)
+const { getZarfBinary } = __nccwpck_require__(6760);
+
+async function setup() {
+  try {
+    // Get version of zarf to be installed
+    const version = core.getInput('version');
+
+    // Download the specific version of zarf
+    const download = getZarfBinary(version);
+    const pathToBinary = await tc.downloadTool(download.url);
+
+    // Debugging. Need to remove when finished
+    core.debug(pathToBinary);
+
+    // Expose the zarf binary by adding it to the PATH
+    core.addPath(pathToBinary);
+
+    // Get the path to the zarf binary
+    const zarfPath = await io.which('zarf', true);
+
+    // Debugging. Need to remove when finished
+    core.debug(zarfPath);
+
+    // Execute the zarf binary
+    await exec.exec(`"${zarfPath}"`);
+
+  } catch (err) {
+    core.setFailed(err);
+  }
+}
+
+setup();
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
 //# sourceMappingURL=index.js.map
