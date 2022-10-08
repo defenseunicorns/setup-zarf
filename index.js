@@ -11,7 +11,7 @@ async function setup() {
 
     // Download the specific version of zarf
     const download = getZarfBinary(version);
-    const downloadPath = '/usr/local/bin/'
+    const downloadPath = '/usr/local/bin/zarf'
     const pathToBinary = await tc.downloadTool(download.url, downloadPath);
 
     // Debugging. Need to remove when finished
@@ -21,10 +21,10 @@ async function setup() {
     core.addPath(pathToBinary);
 
     // Get the path to the zarf binary
-    const checkForZarf = await io.which('zarf', true);
+    // const checkForZarf = await io.which('zarf', true);
 
     // Debugging. Need to remove when finished
-    core.debug(checkForZarf);
+    // core.debug(checkForZarf);
 
     // Execute the zarf binary
     await exec.exec(`zarf`);
