@@ -19,11 +19,17 @@ async function setup() {
     const download = getZarfBinary(version);
     const pathToBinary = await tc.downloadTool(download.url);
 
+    // Debugging. Need to remove when finished
+    core.debug(pathToBinary);
+
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
 
     // Get the path to the zarf binary
     const zarfPath = await io.which('zarf', true);
+
+    // Debugging. Need to remove when finished
+    core.debug(zarfPath);
 
     // Execute the zarf binary
     await exec.exec(`"${zarfPath}"`);
