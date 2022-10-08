@@ -30,7 +30,7 @@ function mapOS(os) {
 function getZarfBinary(version) {
   const platform = os.platform();
   const arch = os.arch();
-  const filename = `zarf_${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
+  const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
   // const binPath = path.join(filename, 'bin');
   const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
   return {
