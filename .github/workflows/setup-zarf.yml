@@ -22,4 +22,4 @@ jobs:
     name: Test Zarf Path
     needs: setup_zarf
     steps:
-      - run: echo ${{needs.setup_zarf.outputs.pathToZarfBinary}}
+      - run: ${{needs.setup_zarf.outputs.pathToZarfBinary}}
