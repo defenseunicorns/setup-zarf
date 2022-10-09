@@ -18,9 +18,9 @@ async function setup() {
     fs.chmod(pathToBinary, 100, (err) => {
 
       if (err) {
-        core.debug("Failed to add executable permission to zarf binary...");
+        core.setFailed("Failed to add executable permission to zarf binary...");
       } else {
-        core.debug("Successfully added executable permission to zarf binary");
+        core.info("Successfully added executable permission to zarf binary");
       }
   
     });
@@ -29,19 +29,17 @@ async function setup() {
     fs.access(pathToBinary, fs.constants.X_OK, (err) => {
 
       if (err) {
-      core.debug("Do not have executable permissions for the zarf binary...");
+      core.setFailed("Do not have executable permissions for the zarf binary...");
       } else {
-      core.debug("Can execute the zarf binary...");
+      core.info("Can execute the zarf binary...");
       }
 
     });
 
     // Expose the zarf binary by adding it to the PATH
-    core.debug("Adding zarf binary to the PATH...");
     core.addPath(pathToBinary);
 
     // Execute the zarf binary
-    core.debug("Executing the zarf binary...");
     await exec.exec(pathToBinary);
 
   } catch (err) {
