@@ -8,12 +8,8 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: 'setup-zarf'
+        
       - name: Setup Zarf
         uses: ./
         # with:
           # version: ''
-      # - name: Check Zarf Version
-      #   run: |
-      #     zarf version
