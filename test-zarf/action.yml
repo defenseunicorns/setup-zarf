@@ -1,0 +1,9 @@
+name: 'Setup Zarf'
+description: 'GitHub Action for Installing Zarf'
+inputs:
+  zarfPath:  # id of input
+    description: 'The Path To The Zarf Binary'
+    required: true
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
