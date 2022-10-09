@@ -1,11 +1,10 @@
 const core = require('@actions/core');
 const tc = require('@actions/tool-cache');
 const exec = require('@actions/exec');
-const io = require('@actions/io');
 const fs = require('fs');
 const { getZarfBinary } = require('./lib/utils');
 
-async function setup() {
+async function setupZarf() {
   try {
     // Get version of zarf to be installed
     const version = core.getInput('version');
@@ -48,4 +47,4 @@ async function setup() {
   }
 }
 
-setup();
+setupZarf();

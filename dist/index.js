@@ -6744,11 +6744,10 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(6024);
 const tc = __nccwpck_require__(3594);
 const exec = __nccwpck_require__(2423);
-const io = __nccwpck_require__(6202);
 const fs = __nccwpck_require__(7147);
 const { getZarfBinary } = __nccwpck_require__(6760);
 
-async function setup() {
+async function setupZarf() {
   try {
     // Get version of zarf to be installed
     const version = core.getInput('version');
@@ -6791,7 +6790,7 @@ async function setup() {
   }
 }
 
-setup();
+setupZarf();
 })();
 
 module.exports = __webpack_exports__;
