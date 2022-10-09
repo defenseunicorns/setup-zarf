@@ -3,13 +3,23 @@ jobs:
   setup_zarf:
     runs-on: ubuntu-latest
     name: Setup Zarf
+    outputs:
+      pathToZarfBinary: ${{ steps.setup_zarf.zarfPath }}
     steps:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v3
-        
+
       - name: Setup Zarf
+        id: setup_zarf
         uses: ./
         # with:
           # version: ''
+
+  test_zarf_path:
+    runs-on: ubuntu-latest
+    name: Test Zarf Path
+    needs: setup_zarf
+    steps:
+      - run: echo ${{needs.setup_zarf.outputs.pathToZarfBinary}}

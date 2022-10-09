@@ -42,6 +42,9 @@ async function setupZarf() {
     core.info("Executing the zarf binary...")
     await exec.exec(pathToBinary);
 
+    // Set the path to the executable zarf binary as a job output
+    core.setOutput("zarfPath", pathToBinary);
+
   } catch (err) {
     core.setFailed(err);
   }
