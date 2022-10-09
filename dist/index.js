@@ -33,8 +33,7 @@ function getZarfBinary(version) {
   const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
   const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
   return {
-    url,
-    filename
+    url
   };
 }
 
@@ -6772,9 +6771,7 @@ async function setup() {
     core.addPath(pathToBinary);
 
     // Execute the zarf binary
-    const zarfBinary = download.filename;
-    core.debug(zarfBinary);
-    await exec.exec(zarfBinary);
+    await exec.exec(pathToBinary);
 
   } catch (err) {
     core.setFailed(err);

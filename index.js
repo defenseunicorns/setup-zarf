@@ -28,9 +28,7 @@ async function setup() {
     core.addPath(pathToBinary);
 
     // Execute the zarf binary
-    const zarfBinary = download.filename;
-    core.debug(zarfBinary);
-    await exec.exec(zarfBinary);
+    await exec.exec(pathToBinary);
 
   } catch (err) {
     core.setFailed(err);
