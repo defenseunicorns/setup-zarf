@@ -1,7 +1,8 @@
 const core = require('@actions/core');
 const tc = require('@actions/tool-cache');
-const exec = require('@actions/exec')
-const io = require('@actions/io')
+const exec = require('@actions/exec');
+const io = require('@actions/io');
+const fs = require('fs');
 const { getZarfBinary } = require('./lib/utils');
 
 async function setup() {
@@ -9,25 +10,24 @@ async function setup() {
     // Get version of zarf to be installed
     const version = core.getInput('version');
 
-    // Download the specific version of zarf
+    // Download the specified version of zarf
     const download = getZarfBinary(version);
-    const downloadPath = '/usr/local/bin/zarf'
-    const pathToBinary = await tc.downloadTool(download.url, downloadPath);
+    const pathToBinary = await tc.downloadTool(download.url);
 
     // Debugging. Need to remove when finished
     core.debug(pathToBinary);
 
+    // Set executable permission for the owner of the file
+    const filePermissions = fs.chmod(pathToBinary, 100);
+    core.debug(filePermissions);
+
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
 
-    // Get the path to the zarf binary
-    // const checkForZarf = await io.which('zarf', true);
-
-    // Debugging. Need to remove when finished
-    // core.debug(checkForZarf);
-
     // Execute the zarf binary
-    await exec.exec(`zarf`);
+    const zarfBinary = download.filename;
+    core.debug(zarfBinary);
+    await exec.exec(zarfBinary);
 
   } catch (err) {
     core.setFailed(err);

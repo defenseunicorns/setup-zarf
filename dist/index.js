@@ -33,7 +33,8 @@ function getZarfBinary(version) {
   const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
   const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
   return {
-    url
+    url,
+    filename
   };
 }
 
@@ -6743,8 +6744,9 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(6024);
 const tc = __nccwpck_require__(3594);
-const exec = __nccwpck_require__(2423)
-const io = __nccwpck_require__(6202)
+const exec = __nccwpck_require__(2423);
+const io = __nccwpck_require__(6202);
+const fs = __nccwpck_require__(7147);
 const { getZarfBinary } = __nccwpck_require__(6760);
 
 async function setup() {
@@ -6752,25 +6754,24 @@ async function setup() {
     // Get version of zarf to be installed
     const version = core.getInput('version');
 
-    // Download the specific version of zarf
+    // Download the specified version of zarf
     const download = getZarfBinary(version);
-    const downloadPath = '/usr/local/bin/zarf'
-    const pathToBinary = await tc.downloadTool(download.url, downloadPath);
+    const pathToBinary = await tc.downloadTool(download.url);
 
     // Debugging. Need to remove when finished
     core.debug(pathToBinary);
 
+    // Set executable permission for the owner of the file
+    const filePermissions = fs.chmod(pathToBinary, 100);
+    core.debug(filePermissions);
+
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
 
-    // Get the path to the zarf binary
-    // const checkForZarf = await io.which('zarf', true);
-
-    // Debugging. Need to remove when finished
-    // core.debug(checkForZarf);
-
     // Execute the zarf binary
-    await exec.exec(`zarf`);
+    const zarfBinary = download.filename;
+    core.debug(zarfBinary);
+    await exec.exec(zarfBinary);
 
   } catch (err) {
     core.setFailed(err);
