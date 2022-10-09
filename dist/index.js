@@ -6757,20 +6757,34 @@ async function setup() {
     const download = getZarfBinary(version);
     const pathToBinary = await tc.downloadTool(download.url);
 
-    // Debugging. Need to remove when finished
-    core.debug(pathToBinary);
+    // Set executable permission for the zarf binary
+    fs.chmod(pathToBinary, 100, (err) => {
 
-    // Set executable permission for the owner of the file
-    fs.chmod(pathToBinary, 100, () => {
+      if (err) {
+        core.debug("Failed to add executable permission to zarf binary...");
+      } else {
+        core.debug("Successfully added executable permission to zarf binary");
+      }
+  
+    });
 
-      // Return the file permissions
-      core.debug(fs.statSync(pathToBinary).mode);
-    })
+    // Verify we have executable permissions on the zarf binary
+    fs.access(pathToBinary, fs.constants.X_OK, (err) => {
+
+      if (err) {
+      core.debug("Do not have executable permissions for the zarf binary...");
+      } else {
+      core.debug("Can execute the zarf binary...");
+      }
+
+    });
 
     // Expose the zarf binary by adding it to the PATH
+    core.debug("Adding zarf binary to the PATH...")
     core.addPath(pathToBinary);
 
     // Execute the zarf binary
+    core.debug("Executing the zarf binary...")
     await exec.exec(pathToBinary);
 
   } catch (err) {
