@@ -6764,7 +6764,7 @@ async function setup() {
     fs.chmod(pathToBinary, 100, () => {
 
       // Return the file permissions
-      core.debug("Current File Mode:", fs.statSync(pathToBinary).mode);
+      core.debug(fs.statSync(pathToBinary).mode);
     })
 
     // Expose the zarf binary by adding it to the PATH
