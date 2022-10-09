@@ -18,8 +18,11 @@ async function setup() {
     core.debug(pathToBinary);
 
     // Set executable permission for the owner of the file
-    const filePermissions = fs.chmod(pathToBinary, 100);
-    core.debug(filePermissions);
+    fs.chmod(pathToBinary, 100, () => {
+
+      // Return the file permissions
+      core.debug("Current File Mode:", fs.statSync(pathToBinary).mode);
+    })
 
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
