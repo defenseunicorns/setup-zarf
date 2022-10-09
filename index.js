@@ -20,7 +20,7 @@ async function setup() {
       if (err) {
         core.setFailed("Failed to add executable permission to zarf binary...");
       } else {
-        core.info("Successfully added executable permission to zarf binary");
+        core.info("Successfully added executable permission to zarf binary...");
       }
   
     });
@@ -40,6 +40,7 @@ async function setup() {
     core.addPath(pathToBinary);
 
     // Execute the zarf binary
+    core.info("Executing the zarf binary...")
     await exec.exec(pathToBinary);
 
   } catch (err) {
