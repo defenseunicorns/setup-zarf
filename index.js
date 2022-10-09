@@ -37,11 +37,11 @@ async function setup() {
     });
 
     // Expose the zarf binary by adding it to the PATH
-    core.debug("Adding zarf binary to the PATH...")
+    core.debug("Adding zarf binary to the PATH...");
     core.addPath(pathToBinary);
 
     // Execute the zarf binary
-    core.debug("Executing the zarf binary...")
+    core.debug("Executing the zarf binary...");
     await exec.exec(pathToBinary);
 
   } catch (err) {
