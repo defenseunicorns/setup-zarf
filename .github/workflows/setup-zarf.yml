@@ -1,7 +1,7 @@
 on: [push]
 jobs:
   setup_zarf:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     name: Setup Zarf
     steps:
       # To use this repository's private action,
