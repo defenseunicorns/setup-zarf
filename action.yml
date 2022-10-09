@@ -1,13 +1,10 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Setup Zarf'
+description: 'GitHub Action for Installing Zarf'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  version:  # id of input
+    description: 'The Version of Zarf to Install'
+    required: false
+    default: '0.21.3'
 runs:
   using: 'node16'
   main: 'dist/index.js'

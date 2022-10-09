@@ -2,24 +2,6 @@
 
 A repository for experimenting with and creating JavaScript GitHub actions.
 
-# Hello world javascript action
+## Development
 
-This action prints "Hello World" or "Hello" + the name of a person to greet to the log.
-
-## Inputs
-
-## `who-to-greet`
-
-**Required** The name of the person to greet. Default `"World"`.
-
-## Outputs
-
-## `time`
-
-The time we greeted you.
-
-## Example usage
-
-uses: ./
-with:
-  who-to-greet: 'Your Name'
+When changes are made to the javascript source code, be sure to run `npm run build` to recompile the code into the dist/index.js file. This will execute the "build" script found in the `package.json` file in the root of the repository.
