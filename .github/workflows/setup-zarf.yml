@@ -18,20 +18,3 @@ jobs:
         uses: ./setup-zarf
         # with:
           # version: ''
-
-  test_zarf:
-    runs-on: ubuntu-latest
-    name: Test Zarf
-    needs: setup_zarf
-    steps:
-      # To use this repository's private action,
-      # you must check out the repository
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: test-inputs-outputs
-
-      - name: Test Zarf
-        uses: ./test-zarf
-        with:
-          zarfPath: ${{needs.setup_zarf.outputs.pathToZarfBinary}}
