@@ -8,16 +8,17 @@ const { getZarfBinary } = require('./lib/utils');
 
 async function setupZarf() {
   try {
+    const download = getZarfBinary(version);
+
     // Get version of zarf to be installed
     const version = core.getInput('version');
 
-    const destination = path.join(os.homedir(), ".zarf/bin/zarf");
-    core.info("Install destination is ${destination}");
+    const destination = path.join(os.homedir(), ".zarf/bin");
+    core.info(`Install destination is ${destination}`);
 
     // Download the specified version of zarf
-    const download = getZarfBinary(version);
     const pathToBinary = await tc.downloadTool(download.url, destination);
-    core.debug("Successfully downloaded ${download.url}");
+    core.debug(`Successfully downloaded ${download.url}`);
 
     // Set executable permission for the zarf binary
     fs.chmod(pathToBinary, 100, (error) => {
@@ -34,7 +35,7 @@ async function setupZarf() {
     core.addPath(pathToBinary);
 
     // Execute the zarf binary
-    await exec.exec("zarf");
+    await exec.exec(pathToBinary);
 
   } catch(error) {
       core.setFailed(error)

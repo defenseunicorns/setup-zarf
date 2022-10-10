@@ -2,13 +2,8 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 6760:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "getZarfBinary": () => (/* binding */ getZarfBinary)
-/* harmony export */ });
 const os = __nccwpck_require__(2037);
 
 function mapArch(arch) {
@@ -36,6 +31,7 @@ function getZarfBinary(version) {
   };
 }
 
+module.exports = { getZarfBinary }
 
 /***/ }),
 
@@ -6730,34 +6726,6 @@ module.exports = require("util");
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
@@ -6776,16 +6744,17 @@ const { getZarfBinary } = __nccwpck_require__(6760);
 
 async function setupZarf() {
   try {
+    const download = getZarfBinary(version);
+
     // Get version of zarf to be installed
     const version = core.getInput('version');
 
-    const destination = path.join(os.homedir(), ".zarf/bin/zarf");
-    core.info("Install destination is ${destination}");
+    const destination = path.join(os.homedir(), ".zarf/bin");
+    core.info(`Install destination is ${destination}`);
 
     // Download the specified version of zarf
-    const download = getZarfBinary(version);
     const pathToBinary = await tc.downloadTool(download.url, destination);
-    core.debug("Successfully downloaded ${download.url}");
+    core.debug(`Successfully downloaded ${download.url}`);
 
     // Set executable permission for the zarf binary
     fs.chmod(pathToBinary, 100, (error) => {
@@ -6802,7 +6771,7 @@ async function setupZarf() {
     core.addPath(pathToBinary);
 
     // Execute the zarf binary
-    await exec.exec("zarf");
+    await exec.exec(pathToBinary);
 
   } catch(error) {
       core.setFailed(error)
