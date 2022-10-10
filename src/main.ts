@@ -43,7 +43,7 @@ async function setupZarf() {
         // core.setFailed(err);
       } else if (err instanceof Error) {
         err.message
-        core.setFailed(err);
+        // core.setFailed(err);
       }
   }
 }

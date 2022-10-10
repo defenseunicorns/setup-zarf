@@ -6635,7 +6635,7 @@ function setupZarf() {
             }
             else if (err instanceof Error) {
                 err.message;
-                core_1.default.setFailed(err);
+                // core.setFailed(err);
             }
         }
     });
