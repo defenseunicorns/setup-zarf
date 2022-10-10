@@ -13,7 +13,7 @@ async function setupZarf() {
     // Get version of zarf to be installed
     const version = core.getInput('version');
 
-    const destination = path.join(os.homedir(), ".zarf/bin");
+    const destination = path.join(os.homedir(), ".zarf/bin/zarf");
     core.info(`Install destination is ${destination}`);
 
     // Download the specified version of zarf
