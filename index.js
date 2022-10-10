@@ -37,8 +37,10 @@ async function setupZarf() {
   
     });
 
+    const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
+
     // Expose the zarf binary by adding it to the PATH
-    core.addPath(pathToBinary);
+    core.addPath(cachedPath);
 
     // // Execute the zarf binary
     // await exec.exec(pathToBinary);
