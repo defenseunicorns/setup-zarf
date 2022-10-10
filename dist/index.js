@@ -6630,7 +6630,7 @@ function setupZarf() {
         catch (err) {
             if (typeof err === "string") {
                 err.toUpperCase();
-                core_1.default.setFailed(err);
+                // core.setFailed(err);
             }
             else if (err instanceof Error) {
                 err.message;

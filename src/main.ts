@@ -39,7 +39,7 @@ async function setupZarf() {
   } catch(err) {
       if (typeof err === "string") {
         err.toUpperCase()
-        core.setFailed(err);
+        // core.setFailed(err);
       } else if (err instanceof Error) {
         err.message
         core.setFailed(err);
