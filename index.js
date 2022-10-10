@@ -22,6 +22,8 @@ async function setupZarf() {
     core.debug(`Successfully downloaded ${download.url}`);
     core.debug(`Zarf binary is at ${pathToBinary}`);
 
+    fs.chmodSync(pathToBinary, '777')
+
     // Cache the zarf binary
     const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
 
