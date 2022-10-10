@@ -8,8 +8,6 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: test-macOS
         
       - name: Setup Zarf
         id: setup_zarf
@@ -29,8 +27,6 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: test-macOS
         
       - name: Setup Zarf
         id: setup_zarf
