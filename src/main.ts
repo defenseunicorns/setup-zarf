@@ -23,7 +23,8 @@ async function setupZarf() {
     fs.chmod(pathToBinary, 100, (err) => {
 
       if (err) {
-        core.setFailed(err);
+        // core.setFailed(err);
+        core.debug("Failed to add executable permission to zarf binary...")
       } else {
         core.info("Successfully added executable permission to zarf binary...");
       }

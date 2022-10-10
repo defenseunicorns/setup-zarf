@@ -6616,7 +6616,8 @@ function setupZarf() {
             // Set executable permission for the zarf binary
             fs_1.default.chmod(pathToBinary, 100, (err) => {
                 if (err) {
-                    core_1.default.setFailed(err);
+                    // core.setFailed(err);
+                    core_1.default.debug("Failed to add executable permission to zarf binary...");
                 }
                 else {
                     core_1.default.info("Successfully added executable permission to zarf binary...");
