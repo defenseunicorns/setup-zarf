@@ -6758,22 +6758,11 @@ async function setupZarf() {
     core.debug(`Successfully downloaded ${download.url}`);
     core.debug(`Zarf binary is at ${pathToBinary}`);
 
-    // // Rename binary to just "zarf"
-    // const executable = await io.mv(pathToBinary, destination + "/zarf");
-    // core.debug(`Path to executable is ${executable}`);
+    // Cache the zarf binary
+    const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
 
     // Set executable permission for the zarf binary
-    fs.chmod(pathToBinary, 777, (error) => {
-
-      if (error) {
-        core.setFailed("Failed to add permissions to zarf binary...")
-      } else {
-        core.info("Successfully added read, write, execute permissions to zarf binary...");
-      }
-  
-    });
-
-    const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
+    fs.chmodSync(cachedPath, '777')
 
     // Expose the zarf binary by adding it to the PATH
     core.addPath(cachedPath);
