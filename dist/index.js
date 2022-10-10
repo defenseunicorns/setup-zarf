@@ -6735,13 +6735,10 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(6024);
-const exec = __nccwpck_require__(2423);
 const tc = __nccwpck_require__(3594);
-const io = __nccwpck_require__(6202);
 const fs = __nccwpck_require__(7147);
 const os = __nccwpck_require__(2037);
 const path = __nccwpck_require__(1017);
-const { isObject } = __nccwpck_require__(3837);
 const { getZarf } = __nccwpck_require__(6760);
 
 async function setupZarf() {
