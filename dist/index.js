@@ -6765,9 +6765,9 @@ async function setupZarf() {
     core.info(`Successfully downloaded ${zarfDownloadURL}`);
     core.info(`Zarf binary is at ${pathToBinary}`);
 
-    // Add write/execute permissions to the binary file
-    core.info('Adding write/execute permisions to the binary file...')
-    fs.chmodSync(pathToBinary, '300')
+    // Add read/write/execute permissions to the binary file
+    core.info('Adding read/write/execute permisions to the binary file...')
+    fs.chmodSync(pathToBinary, '700')
 
     // Cache the zarf binary
     core.info('Caching the zarf binary...')
