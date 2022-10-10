@@ -6772,14 +6772,14 @@ async function setupZarf() {
     // Cache the zarf binary
     core.info('Caching the zarf binary...')
     const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
-    core.info(`Cached the zarf binary at ${cachedPath}`)
+    core.info(`Cached the zarf binary at ${cachedPath}/zarf`)
 
     // Expose the zarf binary by adding it to the $PATH environment variable
-    core.info(`Adding ${cachedPath} to the $PATH...`)
+    core.info(`Adding ${cachedPath}/zarf to the $PATH...`)
     core.addPath(cachedPath);
     
     // Let the user know the zarf is ready for use
-    core.info('Zarf has been successfully installed/configured and is ready to use')
+    core.info('Zarf has been successfully installed/configured and is ready to use!')
 
   } catch(error) {
       core.setFailed(error)
