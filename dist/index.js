@@ -6765,17 +6765,13 @@ async function setupZarf() {
     core.info(`Successfully downloaded ${zarfDownloadURL}`);
     core.info(`Zarf binary is at ${pathToBinary}`);
 
-    // Adding permissions for the caching operation (may only need write permissions?)
-    core.info('Adding permisions to the binary file so that we can move it into the tool cache directory...')
-    fs.chmodSync(pathToBinary, '777')
+    // Add write/execute permissions to the binary file
+    core.info('Adding write/execute permisions to the binary file...')
+    fs.chmodSync(pathToBinary, '300')
 
     // Cache the zarf binary
     core.info('Caching the zarf binary...')
     const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
-
-    // // Adding permissions to the zarf binary at the cached path
-    // core.info('Adding permissions to the binary at the cached path so that it can be executed...')
-    // fs.chmodSync(cachedPath, '777')
 
     // Expose the zarf binary by adding it to the $PATH environment variable
     core.info('Adding the cached zarf path to the $PATH...')
