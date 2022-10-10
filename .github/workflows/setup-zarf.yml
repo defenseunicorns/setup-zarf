@@ -10,6 +10,8 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ref: test-inputs-outputs
 
       - name: Setup Zarf
         id: setup_zarf
@@ -17,9 +19,6 @@ jobs:
         # with:
           # version: ''
 
-  test_zarf_path:
-    runs-on: ubuntu-latest
-    name: Test Zarf Path
-    needs: setup_zarf
-    steps:
-      - run: ${{needs.setup_zarf.outputs.pathToZarfBinary}}
+      - name: Zarf Version
+        id: zarf_version
+        run: zarf version

@@ -1,52 +1,39 @@
 const core = require('@actions/core');
 const tc = require('@actions/tool-cache');
-const exec = require('@actions/exec');
 const fs = require('fs');
-const { getZarfBinary } = require('./lib/utils');
+const os = require('os');
+const path = require('path');
+const { getZarf } = require('./lib/utils');
 
 async function setupZarf() {
   try {
     // Get version of zarf to be installed
     const version = core.getInput('version');
 
+    // Set the destination path that the zarf binary will be downloaded to
+    const destination = path.join(os.homedir(), ".zarf/bin/zarf");
+    core.info(`Install destination is ${destination}`);
+
     // Download the specified version of zarf
-    const download = getZarfBinary(version);
-    const pathToBinary = await tc.downloadTool(download.url);
+    const download = getZarf(version);
+    const pathToBinary = await tc.downloadTool(download.url, destination);
+    core.debug(`Successfully downloaded ${download.url}`);
+    core.debug(`Zarf binary is at ${pathToBinary}`);
 
-    // Set executable permission for the zarf binary
-    fs.chmod(pathToBinary, 100, (err) => {
+    // Adding permissions for the caching operation (may only need write permissions?)
+    fs.chmodSync(pathToBinary, '777')
 
-      if (err) {
-        core.setFailed("Failed to add executable permission to zarf binary...");
-      } else {
-        core.info("Successfully added executable permission to zarf binary...");
-      }
-  
-    });
+    // Cache the zarf binary
+    const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
 
-    // Verify we have executable permissions on the zarf binary
-    fs.access(pathToBinary, fs.constants.X_OK, (err) => {
-
-      if (err) {
-      core.setFailed("Do not have executable permissions for the zarf binary...");
-      } else {
-      core.info("Can execute the zarf binary...");
-      }
-
-    });
+    // Adding permissions to the zarf binary at the cached path
+    fs.chmodSync(cachedPath, '777')
 
     // Expose the zarf binary by adding it to the PATH
-    core.addPath(pathToBinary);
+    core.addPath(cachedPath);
 
-    // Execute the zarf binary
-    core.info("Executing the zarf binary...")
-    await exec.exec(pathToBinary);
-
-    // Set the path to the executable zarf binary as a job output
-    core.setOutput("zarfPath", pathToBinary);
-
-  } catch (err) {
-    core.setFailed(err);
+  } catch(error) {
+      core.setFailed(error)
   }
 }
 

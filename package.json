@@ -1,24 +1,21 @@
 {
   "name": "github-javascript-actions",
   "version": "1.0.0",
-  "description": "A repository for experimenting with and creating JavaScript GitHub actions",
-  "main": "index.js",
+  "description": "A GitHub Action for Installing Zarf",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build index.js -o dist --source-map --license licenses.txt"
+    "build": "ncc build index.js -o dist --source-map --license LICENSE"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/defenseunicorns/github-javascript-actions.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/defenseunicorns/github-javascript-actions/issues"
-  },
-  "homepage": "https://github.com/defenseunicorns/github-javascript-actions#readme",
+  "repository": "https://github.com/defenseunicorns/github-javascript-actions.git",
+  "author": "Lucas Rodriguez",
+  "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@actions/tool-cache": "^2.0.1"
+    "@actions/exec": "^1.1.1",
+    "@actions/tool-cache": "^2.0.1",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "@types/node": "^18.8.3"
   }
 }
