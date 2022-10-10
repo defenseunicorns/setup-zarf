@@ -24,22 +24,26 @@ async function setupZarf() {
     // Download the specified version of zarf
     const download = getZarf(version);
     const zarfDownloadURL = download.url
-    core.info('Downloading the Zarf binary...')
+    core.info(`Downloading the zarf binary from ${zarfDownloadURL}`)
     const pathToBinary = await tc.downloadTool(zarfDownloadURL, installPath);
     core.info(`Successfully downloaded ${zarfDownloadURL}`);
-    core.info(`Zarf binary is at ${pathToBinary}`);
+    core.info(`The zarf binary is at ${pathToBinary}`);
 
     // Add read/write/execute permissions to the binary file
-    core.info('Adding read/write/execute permisions to the binary file...')
+    core.info(`Adding read/write/execute permisions to ${pathToBinary}`)
     fs.chmodSync(pathToBinary, '700')
 
     // Cache the zarf binary
     core.info('Caching the zarf binary...')
     const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
+    core.info(`Cached the zarf binary at ${cachedPath}`)
 
     // Expose the zarf binary by adding it to the $PATH environment variable
-    core.info('Adding the cached zarf path to the $PATH...')
+    core.info(`Adding ${cachedPath} to the $PATH...`)
     core.addPath(cachedPath);
+    
+    // Let the user know the zarf is ready for use
+    core.info('Zarf has been successfully installed/configured and is ready to use')
 
   } catch(error) {
       core.setFailed(error)
