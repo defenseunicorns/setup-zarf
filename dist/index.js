@@ -1,6 +1,44 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 6760:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+__nccwpck_require__.r(__webpack_exports__);
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "getZarfBinary": () => (/* binding */ getZarfBinary)
+/* harmony export */ });
+const os = __nccwpck_require__(2037);
+
+function mapArch(arch) {
+  const mappings = {
+    x64: 'amd64'
+  };
+  return mappings[arch] || arch;
+}
+
+function mapOS(os) {
+  const mappings = {
+    darwin: 'Darwin',
+    linux: 'Linux'
+  };
+  return mappings[os] || os;
+}
+
+function getZarfBinary(version) {
+  const platform = os.platform();
+  const arch = os.arch();
+  const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
+  const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
+  return {
+    url
+  };
+}
+
+
+/***/ }),
+
 /***/ 5350:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -6539,104 +6577,6 @@ module.exports = v4;
 
 /***/ }),
 
-/***/ 3451:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getZarfBinary = void 0;
-const os_1 = __importDefault(__nccwpck_require__(2037));
-function mapArch(arch) {
-    const mappings = {
-        x64: 'amd64'
-    };
-    return mappings[arch] || arch;
-}
-function mapOS(os) {
-    const mappings = {
-        darwin: 'Darwin',
-        linux: 'Linux'
-    };
-    return mappings[os] || os;
-}
-function getZarfBinary(version) {
-    const platform = os_1.default.platform();
-    const arch = os_1.default.arch();
-    const filename = `zarf_v${version}_${mapOS(platform)}_${mapArch(arch)}`;
-    const url = `https://github.com/defenseunicorns/zarf/releases/download/v${version}/${filename}`;
-    return {
-        url
-    };
-}
-exports.getZarfBinary = getZarfBinary;
-
-
-/***/ }),
-
-/***/ 5974:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __importDefault(__nccwpck_require__(6024));
-const exec_1 = __importDefault(__nccwpck_require__(2423));
-const tool_cache_1 = __importDefault(__nccwpck_require__(3594));
-const fs_1 = __importDefault(__nccwpck_require__(7147));
-const os_1 = __importDefault(__nccwpck_require__(2037));
-const path_1 = __importDefault(__nccwpck_require__(1017));
-const utils_1 = __nccwpck_require__(3451);
-function setupZarf() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            // Get version of zarf to be installed
-            const version = core_1.default.getInput('version');
-            const destination = path_1.default.join(os_1.default.homedir(), ".zarf/bin/zarf");
-            core_1.default.info("Install destination is ${destination}");
-            // Download the specified version of zarf
-            const download = (0, utils_1.getZarfBinary)(version);
-            const pathToBinary = yield tool_cache_1.default.downloadTool(download.url, destination);
-            core_1.default.debug("Successfully downloaded ${download.url}");
-            // Set executable permission for the zarf binary
-            fs_1.default.chmod(pathToBinary, 100, (err) => {
-                if (err) {
-                    core_1.default.setFailed("Failed to add executable permission to zarf binary...");
-                }
-                else {
-                    core_1.default.info("Successfully added executable permission to zarf binary...");
-                }
-            });
-            // Expose the zarf binary by adding it to the PATH
-            core_1.default.addPath(pathToBinary);
-            // Execute the zarf binary
-            yield exec_1.default.exec("zarf");
-        }
-        catch (error) {
-            core_1.default.setFailed("Failed to setup Zarf...");
-        }
-    });
-}
-setupZarf();
-
-
-/***/ }),
-
 /***/ 9491:
 /***/ ((module) => {
 
@@ -6790,18 +6730,89 @@ module.exports = require("util");
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(5974);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+const core = __nccwpck_require__(6024);
+const exec = __nccwpck_require__(2423);
+const tc = __nccwpck_require__(3594);
+const fs = __nccwpck_require__(7147);
+const os = __nccwpck_require__(2037);
+const path = __nccwpck_require__(1017);
+const { getZarfBinary } = __nccwpck_require__(6760);
+
+async function setupZarf() {
+  try {
+    // Get version of zarf to be installed
+    const version = core.getInput('version');
+
+    const destination = path.join(os.homedir(), ".zarf/bin/zarf");
+    core.info("Install destination is ${destination}");
+
+    // Download the specified version of zarf
+    const download = getZarfBinary(version);
+    const pathToBinary = await tc.downloadTool(download.url, destination);
+    core.debug("Successfully downloaded ${download.url}");
+
+    // Set executable permission for the zarf binary
+    fs.chmod(pathToBinary, 100, (error) => {
+
+      if (error) {
+        core.setFailed("Failed to add executable permission to zarf binary...")
+      } else {
+        core.info("Successfully added executable permission to zarf binary...");
+      }
+  
+    });
+
+    // Expose the zarf binary by adding it to the PATH
+    core.addPath(pathToBinary);
+
+    // Execute the zarf binary
+    await exec.exec("zarf");
+
+  } catch(error) {
+      core.setFailed(error)
+  }
+}
+
+setupZarf();
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
 //# sourceMappingURL=index.js.map

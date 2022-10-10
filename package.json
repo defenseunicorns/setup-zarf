@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "A GitHub Action for Installing Zarf",
   "main": "dist/index.js",
-  "scripts":{
-    "build": "ncc build src/main.ts -o dist --source-map --license LICENSE"
+  "scripts": {
+    "build": "ncc build index.js -o dist --source-map --license LICENSE"
   },
   "repository": "https://github.com/defenseunicorns/github-javascript-actions.git",
   "author": "Lucas Rodriguez",

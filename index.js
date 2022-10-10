@@ -1,10 +1,10 @@
-import core from '@actions/core';
-import exec from '@actions/exec';
-import tc from '@actions/tool-cache';
-import fs, { unlink } from 'fs';
-import os from 'os';
-import path from 'path';
-import { getZarfBinary } from './lib/utils';
+const core = require('@actions/core');
+const exec = require('@actions/exec');
+const tc = require('@actions/tool-cache');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { getZarfBinary } = require('./lib/utils');
 
 async function setupZarf() {
   try {
@@ -20,9 +20,9 @@ async function setupZarf() {
     core.debug("Successfully downloaded ${download.url}");
 
     // Set executable permission for the zarf binary
-    fs.chmod(pathToBinary, 100, (err) => {
+    fs.chmod(pathToBinary, 100, (error) => {
 
-      if (err) {
+      if (error) {
         core.setFailed("Failed to add executable permission to zarf binary...")
       } else {
         core.info("Successfully added executable permission to zarf binary...");
@@ -37,7 +37,7 @@ async function setupZarf() {
     await exec.exec("zarf");
 
   } catch(error) {
-      core.setFailed("Failed to setup Zarf...")
+      core.setFailed(error)
   }
 }
 
