@@ -15,14 +15,17 @@ async function setupZarf() {
     // Get version of zarf from user input
     const version = core.getInput('version');
 
-    // Set the destination path that the zarf binary will be downloaded to
-    const destination = path.join(os.homedir(), ".zarf/bin/zarf");
-    core.info(`Install destination is ${destination}`);
+    // Set the path where the zarf binary will be installed
+    const homeDirectory = os.homedir()
+    const installPath = path.join(homeDirectory, ".zarf/bin/zarf");
+    core.debug(`Zarf will be installed at ${installPath}`);
 
     // Download the specified version of zarf
     const download = getZarf(version);
-    const pathToBinary = await tc.downloadTool(download.url, destination);
-    core.debug(`Successfully downloaded ${download.url}`);
+    const zarfDownloadURL = download.url
+    core.debug(`Downloading the Zarf binary...`)
+    const pathToBinary = await tc.downloadTool(zarfDownloadURL, installPath);
+    core.debug(`Successfully downloaded ${zarfDownloadURL}`);
     core.debug(`Zarf binary is at ${pathToBinary}`);
 
     // Adding permissions for the caching operation (may only need write permissions?)
