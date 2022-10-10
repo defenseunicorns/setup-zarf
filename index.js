@@ -40,8 +40,8 @@ async function setupZarf() {
     // Expose the zarf binary by adding it to the PATH
     core.addPath(pathToBinary);
 
-    // Execute the zarf binary
-    await exec.exec(pathToBinary);
+    // // Execute the zarf binary
+    // await exec.exec(pathToBinary);
 
   } catch(error) {
       core.setFailed(error)
