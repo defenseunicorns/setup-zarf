@@ -27,7 +27,7 @@ async function setupZarf() {
     // core.debug(`Path to executable is ${executable}`);
 
     // Set executable permission for the zarf binary
-    fs.chmod(pathToBinary, 100, (error) => {
+    fs.chmod(pathToBinary, 700, (error) => {
 
       if (error) {
         core.setFailed("Failed to add executable permission to zarf binary...")
