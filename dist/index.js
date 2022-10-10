@@ -6778,7 +6778,7 @@ async function setupZarf() {
     core.info(`Adding ${cachedPath}/zarf to the $PATH...`)
     core.addPath(cachedPath);
     
-    // Let the user know the zarf is ready for use
+    // Zarf is ready for use
     core.info('Zarf has been successfully installed/configured and is ready to use!')
 
   } catch(error) {
