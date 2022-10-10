@@ -1,10 +1,17 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 2863:
+/***/ 9969:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+// External packages
+const core = __nccwpck_require__(2186);
+const tc = __nccwpck_require__(7784);
+
+// Node.js core packages
+const fs = __nccwpck_require__(7147);
 const os = __nccwpck_require__(2037);
+const path = __nccwpck_require__(1017);
 
 function mapArch(arch) {
   const mappings = {
@@ -31,7 +38,47 @@ function getZarf(version) {
   };
 }
 
-module.exports = { getZarf }
+async function setupZarf() {
+  try {
+    // Get version of zarf from user input
+    const version = core.getInput('version');
+
+    // Set the path where the zarf binary will be installed
+    const homeDirectory = os.homedir();
+    const binPath = '.zarf/bin/zarf';
+    const installPath = path.join(homeDirectory, binPath);
+    core.info(`Zarf version v${version} will be installed at ${installPath}`);
+
+    // Download the specified version of zarf
+    const download = getZarf(version);
+    const zarfDownloadURL = download.url;
+    core.info(`Downloading the zarf binary from ${zarfDownloadURL}`);
+    const pathToBinary = await tc.downloadTool(zarfDownloadURL, installPath);
+    core.info(`Successfully downloaded ${zarfDownloadURL}`);
+    core.info(`The zarf binary is at ${pathToBinary}`);
+
+    // Add read/write/execute permissions to the binary file
+    core.info(`Adding read/write/execute permisions to ${pathToBinary}`);
+    fs.chmodSync(pathToBinary, '700');
+
+    // Cache the zarf binary
+    core.info('Caching the zarf binary...');
+    const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version);
+    core.info(`Cached the zarf binary at ${cachedPath}/zarf`);
+
+    // Expose the zarf binary by adding it to the $PATH environment variable
+    core.info(`Adding ${cachedPath}/zarf to the $PATH...`);
+    core.addPath(cachedPath);
+    
+    // Zarf is ready for use
+    core.info('Zarf has been successfully installed/configured and is ready to use!');
+
+  } catch(error) {
+      core.setFailed(error.message)
+  }
+}
+
+module.exports = setupZarf;
 
 /***/ }),
 
@@ -6734,59 +6781,17 @@ module.exports = require("util");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-// External packages
 const core = __nccwpck_require__(2186);
-const tc = __nccwpck_require__(7784);
 
-// Node.js core packages
-const fs = __nccwpck_require__(7147);
-const os = __nccwpck_require__(2037);
-const path = __nccwpck_require__(1017);
+const setupZarf = __nccwpck_require__(9969);
 
-// Internal packages
-const { getZarf } = __nccwpck_require__(2863);
-
-async function setupZarf() {
+(async () => {
   try {
-    // Get version of zarf from user input
-    const version = core.getInput('version');
-
-    // Set the path where the zarf binary will be installed
-    const homeDirectory = os.homedir()
-    const binPath = '.zarf/bin/zarf'
-    const installPath = path.join(homeDirectory, binPath);
-    core.info(`Zarf version v${version} will be installed at ${installPath}`);
-
-    // Download the specified version of zarf
-    const download = getZarf(version);
-    const zarfDownloadURL = download.url
-    core.info(`Downloading the zarf binary from ${zarfDownloadURL}`)
-    const pathToBinary = await tc.downloadTool(zarfDownloadURL, installPath);
-    core.info(`Successfully downloaded ${zarfDownloadURL}`);
-    core.info(`The zarf binary is at ${pathToBinary}`);
-
-    // Add read/write/execute permissions to the binary file
-    core.info(`Adding read/write/execute permisions to ${pathToBinary}`)
-    fs.chmodSync(pathToBinary, '700')
-
-    // Cache the zarf binary
-    core.info('Caching the zarf binary...')
-    const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
-    core.info(`Cached the zarf binary at ${cachedPath}/zarf`)
-
-    // Expose the zarf binary by adding it to the $PATH environment variable
-    core.info(`Adding ${cachedPath}/zarf to the $PATH...`)
-    core.addPath(cachedPath);
-    
-    // Zarf is ready for use
-    core.info('Zarf has been successfully installed/configured and is ready to use!')
-
+    await setupZarf();
   } catch(error) {
-      core.setFailed(error)
+    core.setFailed(error.message);
   }
-}
-
-setupZarf();
+})();
 })();
 
 module.exports = __webpack_exports__;
