@@ -19,7 +19,7 @@ async function setupZarf() {
     const homeDirectory = os.homedir()
     const binPath = '.zarf/bin/zarf'
     const installPath = path.join(homeDirectory, binPath);
-    core.info(`Zarf will be installed at ${installPath}`);
+    core.info(`Zarf version v${version} will be installed at ${installPath}`);
 
     // Download the specified version of zarf
     const download = getZarf(version);
