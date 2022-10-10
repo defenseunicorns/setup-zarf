@@ -15,6 +15,6 @@ jobs:
 
       - name: Setup Zarf
         id: setup_zarf
-        uses: ./setup-zarf
+        uses: ./
         # with:
           # version: ''
