@@ -6573,14 +6573,6 @@ module.exports = v4;
 
 /***/ }),
 
-/***/ 8864:
-/***/ ((module) => {
-
-module.exports = eval("require")("@action/io");
-
-
-/***/ }),
-
 /***/ 9491:
 /***/ ((module) => {
 
@@ -6745,7 +6737,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(6024);
 const exec = __nccwpck_require__(2423);
 const tc = __nccwpck_require__(3594);
-const io = __nccwpck_require__(8864);
+const io = __nccwpck_require__(6202);
 const fs = __nccwpck_require__(7147);
 const os = __nccwpck_require__(2037);
 const path = __nccwpck_require__(1017);
