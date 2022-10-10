@@ -1,7 +1,7 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 6760:
+/***/ 3032:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const os = __nccwpck_require__(2037);
@@ -6739,7 +6739,7 @@ const tc = __nccwpck_require__(3594);
 const fs = __nccwpck_require__(7147);
 const os = __nccwpck_require__(2037);
 const path = __nccwpck_require__(1017);
-const { getZarf } = __nccwpck_require__(6760);
+const { getZarf } = __nccwpck_require__(3032);
 
 async function setupZarf() {
   try {

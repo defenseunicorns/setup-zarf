@@ -3,7 +3,7 @@ const tc = require('@actions/tool-cache');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { getZarf } = require('./lib/utils');
+const { getZarf } = require('./lib/get-zarf');
 
 async function setupZarf() {
   try {
