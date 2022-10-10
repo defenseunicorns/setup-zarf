@@ -19,6 +19,6 @@ jobs:
         # with:
           # version: ''
 
-      - name: Test Zarf
-        id: test_zarf
+      - name: Zarf Version
+        id: zarf_version
         run: zarf version
