@@ -8,8 +8,6 @@ const { getZarfBinary } = require('./lib/utils');
 
 async function setupZarf() {
   try {
-    const download = getZarfBinary(version);
-
     // Get version of zarf to be installed
     const version = core.getInput('version');
 
@@ -17,6 +15,7 @@ async function setupZarf() {
     core.info(`Install destination is ${destination}`);
 
     // Download the specified version of zarf
+    const download = getZarfBinary(version);
     const pathToBinary = await tc.downloadTool(download.url, destination);
     core.debug(`Successfully downloaded ${download.url}`);
 
