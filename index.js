@@ -1,13 +1,18 @@
+// External packages
 const core = require('@actions/core');
 const tc = require('@actions/tool-cache');
+
+// Node.js core packages
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+
+// Internal packages
 const { getZarf } = require('./lib/get-zarf');
 
 async function setupZarf() {
   try {
-    // Get version of zarf to be installed
+    // Get version of zarf from user input
     const version = core.getInput('version');
 
     // Set the destination path that the zarf binary will be downloaded to
