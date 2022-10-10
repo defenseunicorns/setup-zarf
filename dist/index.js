@@ -6755,31 +6755,31 @@ async function setupZarf() {
     const homeDirectory = os.homedir()
     const binPath = '.zarf/bin/zarf'
     const installPath = path.join(homeDirectory, binPath);
-    core.info(`Zarf will be installed at ${installPath}`);
+    core.info(`Zarf version v${version} will be installed at ${installPath}`);
 
     // Download the specified version of zarf
     const download = getZarf(version);
     const zarfDownloadURL = download.url
-    core.info('Downloading the Zarf binary...')
+    core.info(`Downloading the zarf binary from ${zarfDownloadURL}`)
     const pathToBinary = await tc.downloadTool(zarfDownloadURL, installPath);
     core.info(`Successfully downloaded ${zarfDownloadURL}`);
-    core.info(`Zarf binary is at ${pathToBinary}`);
+    core.info(`The zarf binary is at ${pathToBinary}`);
 
-    // Adding permissions for the caching operation (may only need write permissions?)
-    core.info('Adding permisions to the binary file so that we can move it into the tool cache directory...')
-    fs.chmodSync(pathToBinary, '777')
+    // Add read/write/execute permissions to the binary file
+    core.info(`Adding read/write/execute permisions to ${pathToBinary}`)
+    fs.chmodSync(pathToBinary, '700')
 
     // Cache the zarf binary
     core.info('Caching the zarf binary...')
     const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
-
-    // // Adding permissions to the zarf binary at the cached path
-    // core.info('Adding permissions to the binary at the cached path so that it can be executed...')
-    // fs.chmodSync(cachedPath, '777')
+    core.info(`Cached the zarf binary at ${cachedPath}/zarf`)
 
     // Expose the zarf binary by adding it to the $PATH environment variable
-    core.info('Adding the cached zarf path to the $PATH...')
+    core.info(`Adding ${cachedPath}/zarf to the $PATH...`)
     core.addPath(cachedPath);
+    
+    // Let the user know the zarf is ready for use
+    core.info('Zarf has been successfully installed/configured and is ready to use!')
 
   } catch(error) {
       core.setFailed(error)
