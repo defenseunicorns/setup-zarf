@@ -17,7 +17,8 @@ async function setupZarf() {
 
     // Set the path where the zarf binary will be installed
     const homeDirectory = os.homedir()
-    const installPath = path.join(homeDirectory, ".zarf/bin/zarf");
+    const binPath = '.zarf/bin/zarf'
+    const installPath = path.join(homeDirectory, binPath);
     core.info(`Zarf will be installed at ${installPath}`);
 
     // Download the specified version of zarf
@@ -36,9 +37,9 @@ async function setupZarf() {
     core.info('Caching the zarf binary...')
     const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version)
 
-    // Adding permissions to the zarf binary at the cached path
-    core.info('Adding permissions to the binary at the cached path so that it can be executed...')
-    fs.chmodSync(cachedPath, '777')
+    // // Adding permissions to the zarf binary at the cached path
+    // core.info('Adding permissions to the binary at the cached path so that it can be executed...')
+    // fs.chmodSync(cachedPath, '777')
 
     // Expose the zarf binary by adding it to the $PATH environment variable
     core.info('Adding the cached zarf path to the $PATH...')
