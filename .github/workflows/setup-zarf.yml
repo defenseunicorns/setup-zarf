@@ -1,8 +1,27 @@
 on: [push]
 jobs:
-  setup_zarf:
+  setup_zarf_ubuntu:
     runs-on: ubuntu-latest
-    name: Setup Zarf
+    name: Setup Zarf On Ubuntu
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup Zarf
+        id: setup_zarf
+        uses: ./
+        # with:
+          # version: ''
+
+      - name: Zarf Version
+        id: zarf_version
+        run: zarf version
+
+  setup_zarf_mac:
+    runs-on: macos-latest
+    name: Setup Zarf On MacOS
     steps:
       # To use this repository's private action,
       # you must check out the repository
