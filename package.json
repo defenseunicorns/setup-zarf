@@ -4,9 +4,12 @@
   "description": "A GitHub Action for Installing Zarf",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build index.js -o dist --source-map --license LICENSE"
+    "build": "ncc build -o dist src/main.ts --source-map --license LICENSE"
   },
-  "repository": "https://github.com/defenseunicorns/github-javascript-actions.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/defenseunicorns/github-javascript-actions.git"
+  },
   "author": "Defense Unicorns",
   "license": "MIT",
   "dependencies": {
@@ -17,6 +20,8 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.34.0"
+    "@types/node": "^18.8.5",
+    "@vercel/ncc": "^0.34.0",
+    "typescript": "^4.8.4"
   }
 }

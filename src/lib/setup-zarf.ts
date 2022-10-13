@@ -1,28 +1,29 @@
 // External packages
-const core = require('@actions/core');
-const tc = require('@actions/tool-cache');
+import core from '@actions/core';
+import tc from '@actions/tool-cache';
 
 // Node.js core packages
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 
-function mapArch(arch) {
-  const mappings = {
-    x64: 'amd64'
-  };
-  return mappings[arch] || arch;
+// Map for names of runner architectures
+function mapArch(arch: string) {
+  const archMap = new Map();
+  archMap.set("x64", "amd64");
+  return archMap;
 }
 
-function mapOS(os) {
-  const mappings = {
-    darwin: 'Darwin',
-    linux: 'Linux'
-  };
-  return mappings[os] || os;
+// Map for names of runner operating systems
+function mapOS(os: string) {
+  const osMap = new Map();
+  osMap.set("darwin", "Darwin");
+  osMap.set("linux", "Linux");
+  return osMap;
 }
 
-function getZarf(version) {
+// Construct the zarf download url
+function getZarf(version: string) {
   const platform = os.platform();
   const arch = os.arch();
   const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
@@ -32,7 +33,7 @@ function getZarf(version) {
   };
 }
 
-async function setupZarf() {
+export async function setupZarf() {
   try {
     // Get version of zarf from user input
     const version = core.getInput('version');
@@ -68,8 +69,10 @@ async function setupZarf() {
     core.info('Zarf has been successfully installed/configured and is ready to use!');
 
   } catch(error) {
-      core.setFailed(error.message)
+    let errorMessage = "Failed to install Zarf";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    core.setFailed(errorMessage);
   }
 }
-
-module.exports = setupZarf;
