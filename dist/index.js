@@ -2,13 +2,8 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 9969:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "setupZarf": () => (/* binding */ setupZarf)
-/* harmony export */ });
 // External packages
 const core = __nccwpck_require__(2186);
 const tc = __nccwpck_require__(7784);
@@ -18,22 +13,21 @@ const fs = __nccwpck_require__(7147);
 const os = __nccwpck_require__(2037);
 const path = __nccwpck_require__(1017);
 
-// Map for names of runner architectures
-function mapArch() {
-  const archMap = new Map();
-  archMap.set("x64", "amd64");
-  return archMap;
+function mapArch(arch) {
+  const mappings = {
+    x64: 'amd64'
+  };
+  return mappings[arch] || arch;
 }
 
-// Map for names of runner operating systems
-function mapOS() {
-  const osMap = new Map();
-  osMap.set("darwin", "Darwin");
-  osMap.set("linux", "Linux");
-  return osMap;
+function mapOS(os) {
+  const mappings = {
+    darwin: 'Darwin',
+    linux: 'Linux'
+  };
+  return mappings[os] || os;
 }
 
-// Construct zarf download URL
 function getZarf(version) {
   const platform = os.platform();
   const arch = os.arch();
@@ -44,7 +38,6 @@ function getZarf(version) {
   };
 }
 
-// Install Zarf
 async function setupZarf() {
   try {
     // Get version of zarf from user input
@@ -65,7 +58,7 @@ async function setupZarf() {
     core.info(`The zarf binary is at ${pathToBinary}`);
 
     // Add read/write/execute permissions to the binary file
-    core.info(`Adding read/write/execute permissions to ${pathToBinary}`);
+    core.info(`Adding read/write/execute permisions to ${pathToBinary}`);
     fs.chmodSync(pathToBinary, '700');
 
     // Cache the zarf binary
@@ -85,6 +78,7 @@ async function setupZarf() {
   }
 }
 
+module.exports = setupZarf;
 
 /***/ }),
 
@@ -6779,34 +6773,6 @@ module.exports = require("util");
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
@@ -6815,9 +6781,17 @@ module.exports = require("util");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const { setupZarf } = __nccwpck_require__(9969);
+const core = __nccwpck_require__(2186);
 
-setupZarf();
+const setupZarf = __nccwpck_require__(9969);
+
+(async () => {
+  try {
+    await setupZarf();
+  } catch(error) {
+    core.setFailed(error.message);
+  }
+})();
 })();
 
 module.exports = __webpack_exports__;

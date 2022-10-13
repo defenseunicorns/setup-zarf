@@ -1,3 +1,11 @@
-const { setupZarf } = require('./lib/setup-zarf');
+const core = require('@actions/core');
 
-setupZarf();
+const setupZarf = require('./lib/setup-zarf');
+
+(async () => {
+  try {
+    await setupZarf();
+  } catch(error) {
+    core.setFailed(error.message);
+  }
+})();
