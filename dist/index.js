@@ -58,7 +58,7 @@ async function setupZarf() {
     core.info(`The zarf binary is at ${pathToBinary}`);
 
     // Add read/write/execute permissions to the binary file
-    core.info(`Adding read/write/execute permisions to ${pathToBinary}`);
+    core.info(`Adding read/write/execute permissions to ${pathToBinary}`);
     fs.chmodSync(pathToBinary, '700');
 
     // Cache the zarf binary
@@ -6781,17 +6781,9 @@ module.exports = require("util");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const core = __nccwpck_require__(2186);
-
 const setupZarf = __nccwpck_require__(9969);
 
-(async () => {
-  try {
-    await setupZarf();
-  } catch(error) {
-    core.setFailed(error.message);
-  }
-})();
+setupZarf();
 })();
 
 module.exports = __webpack_exports__;
