@@ -4,9 +4,7 @@
   "description": "A GitHub Action for Installing Zarf",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build index.js -o dist --source-map --license LICENSE",
-    "lint": "eslint .",
-    "all": "npm run lint && npm run build"
+    "build": "ncc build index.js -o dist --source-map --license LICENSE"
   },
   "repository": "https://github.com/defenseunicorns/github-javascript-actions.git",
   "author": "Defense Unicorns",
@@ -19,7 +17,6 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.34.0",
-    "eslint": "^8.25.0"
+    "@vercel/ncc": "^0.34.0"
   }
 }
