@@ -6539,7 +6539,7 @@ module.exports = v4;
 
 /***/ }),
 
-/***/ 1219:
+/***/ 399:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -6557,7 +6557,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.setupZarf = void 0;
+exports.getZarf = void 0;
 // External packages
 const core_1 = __importDefault(__nccwpck_require__(2186));
 const tool_cache_1 = __importDefault(__nccwpck_require__(7784));
@@ -6588,6 +6588,7 @@ function getZarf(version) {
         url
     };
 }
+exports.getZarf = getZarf;
 function setupZarf() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -6622,48 +6623,12 @@ function setupZarf() {
             let errorMessage = "Failed to install Zarf";
             if (error instanceof Error) {
                 errorMessage = error.message;
+                core_1.default.setFailed(errorMessage);
             }
-            core_1.default.setFailed(errorMessage);
         }
     });
 }
-exports.setupZarf = setupZarf;
-
-
-/***/ }),
-
-/***/ 399:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __importDefault(__nccwpck_require__(2186));
-const setup_zarf_1 = __nccwpck_require__(1219);
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield (0, setup_zarf_1.setupZarf)();
-    }
-    catch (error) {
-        let errorMessage = "Failed to install Zarf";
-        if (error instanceof Error) {
-            errorMessage = error.message;
-        }
-        core_1.default.setFailed(errorMessage);
-    }
-}))();
+setupZarf();
 
 
 /***/ }),

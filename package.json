@@ -4,7 +4,7 @@
   "description": "A GitHub Action for Installing Zarf",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build -o dist src/main.ts --source-map --license LICENSE"
+    "build": "ncc build src/main.ts -o dist --source-map --license LICENSE"
   },
   "repository": {
     "type": "git",
