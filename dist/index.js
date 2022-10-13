@@ -2,13 +2,8 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 9969:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "setupZarf": () => (/* binding */ setupZarf)
-/* harmony export */ });
 // External packages
 const core = __nccwpck_require__(2186);
 const tc = __nccwpck_require__(7784);
@@ -19,69 +14,71 @@ const os = __nccwpck_require__(2037);
 const path = __nccwpck_require__(1017);
 
 function mapArch(arch) {
-  const mappings = {
-    x64: 'amd64'
-  };
-  return mappings[arch] || arch;
+	const mappings = {
+		x64: "amd64"
+	};
+	return mappings[arch] || arch;
 }
 
 function mapOS(os) {
-  const mappings = {
-    darwin: 'Darwin',
-    linux: 'Linux'
-  };
-  return mappings[os] || os;
+	const mappings = {
+		darwin: "Darwin",
+		linux: "Linux"
+	};
+	return mappings[os] || os;
 }
 
 function getZarf(version) {
-  const platform = os.platform();
-  const arch = os.arch();
-  const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
-  const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
-  return {
-    url
-  };
+	const platform = os.platform();
+	const arch = os.arch();
+	const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
+	const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
+	return {
+		url
+	};
 }
 
 async function setupZarf() {
-  try {
-    // Get version of zarf from user input
-    const version = core.getInput('version');
+	try {
+		// Get version of zarf from user input
+		const version = core.getInput("version");
 
-    // Set the path where the zarf binary will be installed
-    const homeDirectory = os.homedir();
-    const binPath = '.zarf/bin/zarf';
-    const installPath = path.join(homeDirectory, binPath);
-    core.info(`Zarf version v${version} will be installed at ${installPath}`);
+		// Set the path where the zarf binary will be installed
+		const homeDirectory = os.homedir();
+		const binPath = ".zarf/bin/zarf";
+		const installPath = path.join(homeDirectory, binPath);
+		core.info(`Zarf version v${version} will be installed at ${installPath}`);
 
-    // Download the specified version of zarf
-    const download = getZarf(version);
-    const zarfDownloadURL = download.url;
-    core.info(`Downloading the zarf binary from ${zarfDownloadURL}`);
-    const pathToBinary = await tc.downloadTool(zarfDownloadURL, installPath);
-    core.info(`Successfully downloaded ${zarfDownloadURL}`);
-    core.info(`The zarf binary is at ${pathToBinary}`);
+		// Download the specified version of zarf
+		const download = getZarf(version);
+		const zarfDownloadURL = download.url;
+		core.info(`Downloading the zarf binary from ${zarfDownloadURL}`);
+		const pathToBinary = await tc.downloadTool(zarfDownloadURL, installPath);
+		core.info(`Successfully downloaded ${zarfDownloadURL}`);
+		core.info(`The zarf binary is at ${pathToBinary}`);
 
-    // Add read/write/execute permissions to the binary file
-    core.info(`Adding read/write/execute permissions to ${pathToBinary}`);
-    fs.chmodSync(pathToBinary, '700');
+		// Add read/write/execute permissions to the binary file
+		core.info(`Adding read/write/execute permissions to ${pathToBinary}`);
+		fs.chmodSync(pathToBinary, "700");
 
-    // Cache the zarf binary
-    core.info('Caching the zarf binary...');
-    const cachedPath = await tc.cacheFile(pathToBinary, 'zarf', 'zarf', version);
-    core.info(`Cached the zarf binary at ${cachedPath}/zarf`);
+		// Cache the zarf binary
+		core.info("Caching the zarf binary...");
+		const cachedPath = await tc.cacheFile(pathToBinary, "zarf", "zarf", version);
+		core.info(`Cached the zarf binary at ${cachedPath}/zarf`);
 
-    // Expose the zarf binary by adding it to the $PATH environment variable
-    core.info(`Adding ${cachedPath}/zarf to the $PATH...`);
-    core.addPath(cachedPath);
+		// Expose the zarf binary by adding it to the $PATH environment variable
+		core.info(`Adding ${cachedPath}/zarf to the $PATH...`);
+		core.addPath(cachedPath);
     
-    // Zarf is ready for use
-    core.info('Zarf has been successfully installed/configured and is ready to use!');
+		// Zarf is ready for use
+		core.info("Zarf has been successfully installed/configured and is ready to use!");
 
-  } catch(error) {
-      core.setFailed(error.message)
-  }
+	} catch(error) {
+		core.setFailed(error.message);
+	}
 }
+
+module.exports = setupZarf;
 
 
 /***/ }),
@@ -6777,34 +6774,6 @@ module.exports = require("util");
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
