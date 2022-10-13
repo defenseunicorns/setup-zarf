@@ -31,14 +31,14 @@ This is not a required input, and will install whatever the default is set to in
 
 ### Prerequisites
 
-- [Node JS](https://nodejs.org/en/download/) (comes with `npm`)
+- [Node.js LTS](https://nodejs.org/en/download/) (comes with `npm`)
 
 ### Dependencies
 
 To install this project's dependencies, navigate to the root of the repository and run:
 
 ```shell
-npm install
+npm ci
 ```
 
 ### Build
