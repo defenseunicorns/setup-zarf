@@ -34,21 +34,15 @@ function getZarf(version) {
   const arch = os.arch();
   const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
   const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
-  return {
-    filename,
-    url
-  };
+  return url;
 }
 
-// Append .exe file extension to zarf binary if running on a Windows runner
-function isWindowsRunner(version) {
-    let zarfWindowsDownloadURL = "";
+function windowsRunner() {
     if (os.platform().startsWith("win")) {
-      const fileExtension = ".exe";
-      const windowsExecutable = getZarf(version).filename + fileExtension;
-      zarfWindowsDownloadURL = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ windowsExecutable }`;
+      return true;
+    } else {
+      return false;
     }
-    return zarfWindowsDownloadURL;
 }
 
 async function setupZarf() {
@@ -57,17 +51,21 @@ async function setupZarf() {
     const version = core.getInput("version");
 
     // Set the path where the zarf binary will be installed
-    let binPath = "";
-    let zarfDownloadURL = "";
+    let filePath = "";
+    let url = "";
 
-    if (isWindowsRunner) {
-      binPath = ".zarf\\bin\\zarf.exe";
-      zarfDownloadURL = isWindowsRunner(version).zarfWindowsDownloadURL;
+    if (windowsRunner == true) {
+      const windowsPath = ".zarf\\bin\\zarf.exe";
+      filePath = windowsPath;
+      url = getZarf(version).url + ".exe";
     } else {
-      binPath = ".zarf/bin/zarf";
-      zarfDownloadURL = getZarf(version).url;
+      const unixPath = ".zarf/bin/zarf";
+      filePath = unixPath;
+      url = getZarf(version).url;
     }
 
+    const binPath = filePath;
+    const zarfDownloadURL = url;
     const homeDirectory = os.homedir();
     const installPath = path.join(homeDirectory, binPath);
     core.info(`Zarf version v${ version } will be installed at ${ installPath }`);
@@ -85,15 +83,17 @@ async function setupZarf() {
     // Cache the zarf binary
     core.info("Caching the zarf binary...");
 
-    let cachedPath = "";
+    let preCachedPath = "";
 
-    if (isWindowsRunner) {
-      cachedPath = await tc.cacheFile(pathToBinary, "zarf.exe", "zarf", version);
-      core.info(`Cached the zarf binary at ${ cachedPath }/zarf.exe`);
+    if (windowsRunner == true) {
+      preCachedPath = await tc.cacheFile(pathToBinary, "zarf.exe", "zarf", version);
+      core.info(`Cached the zarf binary at ${ preCachedPath }/zarf.exe`);
     } else {
-      cachedPath = await tc.cacheFile(pathToBinary, "zarf", "zarf", version);
-      core.info(`Cached the zarf binary at ${ cachedPath }/zarf`);
+      preCachedPath = await tc.cacheFile(pathToBinary, "zarf", "zarf", version);
+      core.info(`Cached the zarf binary at ${ preCachedPath }/zarf`);
     }
+
+    const cachedPath = preCachedPath;
 
     // Expose the zarf binary by adding it to the $PATH environment variable
     core.info(`Adding ${ cachedPath }/zarf to the $PATH...`);
