@@ -6784,7 +6784,7 @@ var __webpack_exports__ = {};
 (() => {
 const { setupZarf } = __nccwpck_require__(9969);
 
-setupZarf();
+setupZarf;
 })();
 
 module.exports = __webpack_exports__;
