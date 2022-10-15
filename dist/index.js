@@ -40,15 +40,16 @@ function windowsRunner() {
 function getZarf(version) {
   const platform = os.platform();
   const arch = os.arch();
+  let url = "";
   if (windowsRunner == true) {
     const windowsFilename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }.exe`;
-    const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ windowsFilename }`;
-    return url;
+    url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ windowsFilename }`;
   } else {
     const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
-    const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
-    return url;
+    url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
   }
+  const downloadURL = url;
+  return downloadURL;
 }
 
 async function setupZarf() {
@@ -69,7 +70,7 @@ async function setupZarf() {
 
     const binPath = filePath;
     const download = getZarf(version);
-    const zarfDownloadURL = download.url;
+    const zarfDownloadURL = download.downloadURL;
     const homeDirectory = os.homedir();
     const installPath = path.join(homeDirectory, binPath);
     core.info(`Zarf version v${ version } will be installed at ${ installPath }`);
