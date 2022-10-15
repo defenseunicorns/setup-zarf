@@ -52,6 +52,6 @@ This project utilizes a static code analysis tool called [eslint](https://eslint
 
 When changes are made to the javascript source code, run `npm run all` to execute `eslint` against the code and recompile the code into the `dist/index.js` file.
 
-Ideally, this will executed as a pre-commit hook, or in CI in the future.
+Ideally, this would be executed as a pre-commit hook, or in CI in the future.
 
 &nbsp;
