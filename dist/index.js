@@ -42,6 +42,7 @@ function getZarf(version) {
   const arch = os.arch();
 
   let url = "";
+
   if (windowsRunner == true) {
     const windowsFilename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }.exe`;
     url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ windowsFilename }`;
