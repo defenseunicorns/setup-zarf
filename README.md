@@ -9,7 +9,7 @@ If you want to use/test this action, you will have to create your workflows in t
 ```yaml
 - uses: ./
   with:
-     version: '<version>' # default is 0.21.3
+     version: '<version>'
 ```
 
 Once the action is ready to be released publicly, it would be referenced as such:
@@ -17,7 +17,7 @@ Once the action is ready to be released publicly, it would be referenced as such
 ```yaml
 - uses: defenseunicorns/setup-zarf@v1
   with:
-     version: '<version>' # default is 0.21.3
+     version: '<version>'
 ```
 
 ## Inputs
@@ -44,6 +44,14 @@ npm ci
 
 This project utilizes a tool called [ncc](https://github.com/vercel/ncc) to compile the code and all of it's dependencies into a single file, `dist/index.js`.
 
-When changes are made to the javascript source code, be sure to run `npm run build` to recompile the code into the `dist/index.js` file. This will execute the build script (`ncc build`) found in the `package.json` file in the root of the repository.
+### Lint
+
+This project utilizes a static code analysis tool called [eslint](https://eslint.org/).
+
+### Package Scripts
+
+When changes are made to the javascript source code, run `npm run all` to execute `eslint` against the code and recompile the code into the `dist/index.js` file.
+
+Ideally, this will executed as a pre-commit hook, or in CI in the future.
 
 &nbsp;
