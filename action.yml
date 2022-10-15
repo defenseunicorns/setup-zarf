@@ -1,7 +1,7 @@
 name: 'Setup Zarf'
 description: 'GitHub Action for Installing Zarf'
 inputs:
-  version:  # id of input
+  version:
     description: 'The Version of Zarf to Install'
     required: false
     default: '0.22.1'
