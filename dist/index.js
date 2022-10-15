@@ -52,6 +52,8 @@ async function setupZarf() {
     // Get version of zarf from user input
     const version = core.getInput("version");
 
+    const download = getZarf(version);
+
     // Set the path where the zarf binary will be installed
     let filePath = "";
     let url = "";
@@ -59,11 +61,11 @@ async function setupZarf() {
     if (windowsRunner == true) {
       const windowsPath = ".zarf\\bin\\zarf.exe";
       filePath = windowsPath;
-      url = getZarf(version).url + ".exe";
+      url = download.url + ".exe";
     } else {
       const unixPath = ".zarf/bin/zarf";
       filePath = unixPath;
-      url = getZarf(version).url;
+      url = download.url;
     }
 
     const binPath = filePath;
