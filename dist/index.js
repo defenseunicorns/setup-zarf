@@ -29,22 +29,28 @@ function mapOS(os) {
   return mappings[os] || os;
 }
 
+function windowsRunner() {
+  if (os.platform().startsWith("win")) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function getZarf(version) {
   const platform = os.platform();
   const arch = os.arch();
-  const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
-  const url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
+  let url = "";
+  if (windowsRunner == true) {
+    const windowsFilename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }.exe`;
+    url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ windowsFilename }`;
+  } else {
+    const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }`;
+    url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
+  }
   return {
     url
   };
-}
-
-function windowsRunner() {
-    if (os.platform().startsWith("win")) {
-      return true;
-    } else {
-      return false;
-    }
 }
 
 async function setupZarf() {
@@ -52,24 +58,20 @@ async function setupZarf() {
     // Get version of zarf from user input
     const version = core.getInput("version");
 
-    const download = getZarf(version);
-
     // Set the path where the zarf binary will be installed
     let filePath = "";
-    let url = "";
 
     if (windowsRunner == true) {
       const windowsPath = ".zarf\\bin\\zarf.exe";
       filePath = windowsPath;
-      url = download.url += ".exe";
     } else {
       const unixPath = ".zarf/bin/zarf";
       filePath = unixPath;
-      url = download.url;
     }
 
     const binPath = filePath;
-    const zarfDownloadURL = url;
+    const download = getZarf(version);
+    const zarfDownloadURL = download.url;
     const homeDirectory = os.homedir();
     const installPath = path.join(homeDirectory, binPath);
     core.info(`Zarf version v${ version } will be installed at ${ installPath }`);
