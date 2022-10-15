@@ -39,18 +39,13 @@ function getZarf(version) {
   const filename = `zarf_v${ version }_${ mapOS(platform) }_${ mapArch(arch) }${ exeSuffix }`;
   const downloadURL = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
 
-  return {
-    downloadURL
-  };
+  return downloadURL;
 }
 
 async function setupZarf() {
   try {
     // Get version of zarf from user input
     const version = core.getInput("version");
-
-    const zarfDownloadURL = getZarf(version).downloadURL;
-    core.debug(zarfDownloadURL);
 
     // Set the path where the zarf binary will be installed
     const homeDirectory = os.homedir();
@@ -59,13 +54,14 @@ async function setupZarf() {
     core.info(`Zarf version v${ version } will be installed at ${ installPath }`);
 
     // Download the zarf binary
+    const zarfDownloadURL = getZarf(version).downloadURL;
     core.info(`Downloading the zarf binary from ${ zarfDownloadURL }`);
     const pathToBinary = await tc.downloadTool(zarfDownloadURL, installPath);
     core.info(`Successfully downloaded ${ zarfDownloadURL }`);
     core.info(`The zarf binary is at ${ pathToBinary }`);
 
     // Add read/write/execute permissions to the binary file
-    core.info(`Adding read/write/execute permissions to ${ pathToBinary }`);
+    core.info(`Adding read/write/execute permissions to ${ pathToBinary }...`);
     fs.chmodSync(pathToBinary, "700");
 
     // Cache the zarf binary
@@ -76,7 +72,7 @@ async function setupZarf() {
     core.info(`Cached the zarf binary at ${ cachedPath }`);
 
     // Expose the zarf binary by adding it to the $PATH environment variable
-    core.info(`Adding ${ cachedPath }/zarf to the $PATH...`);
+    core.info(`Adding ${ cachedPath } to the $PATH...`);
     core.addPath(cachedPath);
     
     // Zarf is ready for use
