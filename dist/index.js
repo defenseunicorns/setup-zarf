@@ -49,7 +49,9 @@ function getZarf(version) {
     url = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ filename }`;
   }
   const downloadURL = url;
-  return downloadURL;
+  return {
+    downloadURL
+  };
 }
 
 async function setupZarf() {
