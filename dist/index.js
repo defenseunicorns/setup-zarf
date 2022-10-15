@@ -51,7 +51,7 @@ function getZarf(version) {
   }
 
   const downloadURL = url;
-  
+
   return {
     downloadURL
   };
@@ -75,6 +75,7 @@ async function setupZarf() {
 
     const binPath = filePath;
     const zarfDownloadURL = getZarf(version).downloadURL;
+    core.debug(zarfDownloadURL);
     const homeDirectory = os.homedir();
     const installPath = path.join(homeDirectory, binPath);
     core.info(`Zarf version v${ version } will be installed at ${ installPath }`);
