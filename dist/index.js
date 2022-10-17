@@ -78,8 +78,9 @@ async function getZarfInitPackage(version, initPackage) {
   core.info(`The zarf init package is at ${ pathToInitPackage }`);
 
   // Copy the init package to the current working directory
-  core.info(`Copying the zarf init package from ${ pathToInitPackage } to ${ process.cwd() }...`);
-  await io.cp(pathToInitPackage, process.cwd());
+  const workingDir = process.cwd();
+  core.info(`Copying the zarf init package from ${ pathToInitPackage } to ${ workingDir }...`);
+  await io.cp(pathToInitPackage, workingDir);
 }
 
 async function setupZarf() {
@@ -96,7 +97,7 @@ async function setupZarf() {
     // Get the zarf init package
     getZarfInitPackage(version, initPackage);
 
-    // Add read/write/execute permissions to zarf artifacts
+    // Add read/write/execute permissions to the zarf binary
     core.info("Adding read/write/execute permissions to the zarf binary...");
     const zarfBinary = (await getZarfBinary(version)).pathToBinary;
     fs.chmodSync(zarfBinary, "700");
