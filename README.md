@@ -45,7 +45,7 @@ npm ci
 
 ### Build
 
-This project utilizes a tool called [ncc](https://github.com/vercel/ncc) to compile the code and all of it's dependencies into a single file, `dist/index.js`.
+This project utilizes a tool called [ncc](https://github.com/vercel/ncc) to compile the code and all of its dependencies into a single file, `dist/index.js`.
 
 ### Lint
 
