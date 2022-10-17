@@ -1,11 +1,11 @@
 on: [push]
 jobs:
   setup_zarf:
-    # strategy:
-    #   fail-fast: true
-    #   matrix:
-    #     os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: windows-latest # ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     name: Setup Zarf
     steps:
       # To use this repository's private action,
@@ -22,5 +22,5 @@ jobs:
           initPackage: true
           # version: ""
 
-      - name: Zarf Init
-        run: zarf init
+      - name: Zarf Version
+        run: zarf version
