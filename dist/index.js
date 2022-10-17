@@ -57,14 +57,6 @@ async function getZarfBinary(version) {
   };
 }
 
-async function addPermissions(version) {
-  core.info("Adding read/write/execute permissions to the zarf binary...");
-
-  const zarfBinary = getZarfBinary(version).pathToBinary;
-
-  fs.chmodSync(zarfBinary, "700");
-}
-
 async function getZarfInitPackage(version, initPackage) {
   const arch = os.arch();
   const tarball = `zarf-init-${ mapArch(arch) }-v${ version }.tar.zst`;
@@ -98,6 +90,8 @@ async function setupZarf() {
     // Get whether we will download an init package from user input
     const initPackage = core.getInput("initPackage");
 
+    const zarfBinary = getZarfBinary(version).pathToBinary;
+
     // Get the zarf binary
     getZarfBinary(version);
 
@@ -105,10 +99,10 @@ async function setupZarf() {
     getZarfInitPackage(version, initPackage);
 
     // Add read/write/execute permissions to the zarf binary
-    addPermissions();
+    core.info("Adding read/write/execute permissions to the zarf binary...");
+    fs.chmodSync(zarfBinary, "700");
 
     // Cache the zarf binary
-    const zarfBinary = getZarfBinary(version).pathToBinary;
     core.info("Caching the zarf binary...");
     const binaryFile = os.platform().startsWith("win") ? "zarf.exe" : "zarf";
     const toolName = "zarf";
