@@ -24,6 +24,3 @@ jobs:
 
       - name: Zarf Version
         run: zarf version
-
-      - name: Zarf Init
-        run: zarf init
