@@ -7,8 +7,7 @@ inputs:
     default: '0.22.1'
   download_init_package:
     description: 'Download Zarf Init Package'
-    required: false
-    default: 'false'
+    required: true
 runs:
   using: 'node16'
   main: 'dist/index.js'
