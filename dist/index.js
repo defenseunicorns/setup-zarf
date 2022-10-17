@@ -6,6 +6,7 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 // External packages
 const core = __nccwpck_require__(2186);
+const io = __nccwpck_require__(7436);
 const tc = __nccwpck_require__(7784);
 
 // Node.js core packages
@@ -91,6 +92,9 @@ async function setupZarf() {
     }
     const pathToInitPackage = initPath;
     core.info(`The zarf init package is at ${ pathToInitPackage }`);
+
+    // Move the init package to the current working directory
+    await io.mv(pathToInitPackage, process.cwd());
 
     // Add read/write/execute permissions to zarf artifacts
     core.info("Adding read/write/execute permissions to zarf artifacts...");

@@ -21,6 +21,5 @@ jobs:
         with:
           initPackage: true
 
-      - name: Zarf Version
-        id: zarf_version
-        run: zarf init "${HOME}"/.zarf/ --confirm
+      - name: Zarf Init
+        run: zarf init --confirm
