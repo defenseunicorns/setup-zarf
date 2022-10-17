@@ -57,7 +57,7 @@ async function getZarfBinary(version) {
   };
 }
 
-async function getZarfInitPackage(version, initPackage) {
+async function getZarfInitPackage(version) {
   const arch = os.arch();
   const tarball = `zarf-init-${ mapArch(arch) }-v${ version }.tar.zst`;
   const initPackageURL = `https://github.com/defenseunicorns/zarf/releases/download/v${ version }/${ tarball }`;
@@ -68,13 +68,9 @@ async function getZarfInitPackage(version, initPackage) {
   core.info(`The zarf init package ${ tarball } will be installed at ${ initPackagePath }`);
 
   // Download the zarf init package
-  let initPath = "";
-  if (initPackage == "true") {
-    core.info(`Downloading the zarf init package from ${ initPackageURL }...`);
-    initPath = await tc.downloadTool(initPackageURL, initPackagePath);
-    core.info(`Successfully downloaded ${ initPackageURL }`);
-  }
-  const pathToInitPackage = initPath;
+  core.info(`Downloading the zarf init package from ${ initPackageURL }...`);
+  const pathToInitPackage = await tc.downloadTool(initPackageURL, initPackagePath);
+  core.info(`Successfully downloaded ${ initPackageURL }`);
   core.info(`The zarf init package is at ${ pathToInitPackage }`);
 
   // Copy the init package to the current working directory
@@ -95,7 +91,9 @@ async function setupZarf() {
     getZarfBinary(version);
 
     // Get the zarf init package
-    getZarfInitPackage(version, initPackage);
+    if (initPackage == "true") {
+      getZarfInitPackage(version);
+    }
 
     // Add read/write/execute permissions to the zarf binary
     core.info("Adding read/write/execute permissions to the zarf binary...");
