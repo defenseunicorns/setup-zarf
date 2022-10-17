@@ -5,7 +5,7 @@ inputs:
     description: 'The Version of Zarf to Install'
     required: false
     default: '0.22.1'
-  initPackage:
+  download_init_package:
     description: 'Download Zarf Init Package'
     required: false
     default: 'false'
