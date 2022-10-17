@@ -18,8 +18,8 @@ jobs:
       - name: Setup Zarf
         id: setup_zarf
         uses: ./
-        with:
-          initPackage: true
+        # with:
+        #   initPackage: true
 
       - name: Zarf Version
         id: zarf_version
