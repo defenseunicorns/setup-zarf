@@ -57,6 +57,8 @@ function getZarfInitPackage(version) {
 
 async function setupZarf() {
   try {
+    core.debug(process.cwd());
+
     // Get version of zarf from user input
     const version = core.getInput("version");
 
