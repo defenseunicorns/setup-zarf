@@ -79,9 +79,9 @@ async function getZarfInitPackage(version) {
   await io.cp(pathToInitPackage, workingDir);
 }
 
-async function validateInitPackageInput(downloadInitPackage) {
-  if (await downloadInitPackage !== "true" && await downloadInitPackage !== "false") {
-      core.setFailed("Available values for download_init_package are 'true' or 'false'. Letters should be all lowercase. The default value is set to 'false'.");
+function validateInitPackageInput(downloadInitPackage) {
+  if (downloadInitPackage !== "true" && downloadInitPackage !== "false") {
+      core.setFailed("download_init_package is a required input for the setup-zarf action. Available values for download_init_package are 'true' or 'false'. Letters should be all lowercase. Check out the Zarf docs to learn more about zarf init packages - https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package");
   }
 }
 
@@ -93,15 +93,15 @@ async function setupZarf() {
     // Get whether we will download an init package from user input
     const downloadInitPackage = core.getInput("download_init_package");
     
-    // Get the zarf binary
-    const zarfBinary = (await getZarfBinary(version)).pathToBinary;
-
     // Get the zarf init package
     if (downloadInitPackage == "true") {
-      getZarfInitPackage(version);
+      await getZarfInitPackage(version);
     } else {
-      validateInitPackageInput();
+      validateInitPackageInput(downloadInitPackage);
     }
+
+    // Get the zarf binary
+    const zarfBinary = (await getZarfBinary(version)).pathToBinary;
 
     // Add read/write/execute permissions to the zarf binary
     core.info("Adding read/write/execute permissions to the zarf binary...");
