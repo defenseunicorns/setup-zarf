@@ -88,9 +88,9 @@ async function setupZarf() {
       core.info(`Downloading the zarf init package from ${ zarfInitPackageURL }...`);
       initPath = await tc.downloadTool(zarfInitPackageURL, initPackagePath);
       core.info(`Successfully downloaded ${ zarfInitPackageURL }`);
-      core.info(`The zarf init package is at ${ path }`);
     }
     const pathToInitPackage = initPath;
+    core.info(`The zarf init package is at ${ pathToInitPackage }`);
 
     // Add read/write/execute permissions to zarf artifacts
     core.info("Adding read/write/execute permissions to zarf artifacts...");
