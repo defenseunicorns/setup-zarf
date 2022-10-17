@@ -22,4 +22,4 @@ jobs:
           initPackage: true
 
       - name: Zarf Init
-        run: zarf init --components k3s --confirm
+        run: sudo zarf init --components k3s --confirm
