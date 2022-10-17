@@ -90,16 +90,15 @@ async function setupZarf() {
     // Get whether we will download an init package from user input
     const initPackage = core.getInput("initPackage");
 
-    const zarfBinary = getZarfBinary(version).pathToBinary;
-
     // Get the zarf binary
     getZarfBinary(version);
 
     // Get the zarf init package
     getZarfInitPackage(version, initPackage);
 
-    // Add read/write/execute permissions to the zarf binary
+    // Add read/write/execute permissions to zarf artifacts
     core.info("Adding read/write/execute permissions to the zarf binary...");
+    const zarfBinary = (await getZarfBinary(version)).pathToBinary;
     fs.chmodSync(zarfBinary, "700");
 
     // Cache the zarf binary
