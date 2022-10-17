@@ -99,21 +99,21 @@ async function setupZarf() {
       fs.chmodSync(pathToInitPackage, "700");
     }
 
-    // Cache the zarf binary
-    core.info("Caching the zarf binary...");
-    const binaryFile = os.platform().startsWith("win") ? "zarf.exe" : "zarf";
-    const toolName = "zarf";
-    const binCachedPath = await tc.cacheFile(pathToBinary, binaryFile, toolName, version);
-    core.info(`Cached the zarf binary at ${ binCachedPath }`);
+    // // Cache the zarf binary
+    // core.info("Caching the zarf binary...");
+    // const binaryFile = os.platform().startsWith("win") ? "zarf.exe" : "zarf";
+    // const toolName = "zarf";
+    // const binCachedPath = await tc.cacheFile(pathToBinary, binaryFile, toolName, version);
+    // core.info(`Cached the zarf binary at ${ binCachedPath }`);
 
-    // Cache the zarf init package
-    core.info("Caching the zarf init package...");
-    const initPackageCachedPath = await tc.cacheFile(pathToInitPackage, initPackageTarball, toolName, version);
-    core.info(`Cached the zarf init package at ${ initPackageCachedPath }`);
+    // // Cache the zarf init package
+    // core.info("Caching the zarf init package...");
+    // const initPackageCachedPath = await tc.cacheFile(pathToInitPackage, initPackageTarball, toolName, version);
+    // core.info(`Cached the zarf init package at ${ initPackageCachedPath }`);
 
     // Expose the zarf binary by adding it to the $PATH environment variable
-    core.info(`Adding ${ binCachedPath } to the $PATH...`);
-    core.addPath(binCachedPath);
+    core.info(`Adding ${ pathToBinary } to the $PATH...`);
+    core.addPath(pathToBinary);
     
     // Zarf is ready for use
     core.info("Zarf has been successfully installed/configured and is ready to use!");
