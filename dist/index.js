@@ -82,6 +82,25 @@ async function getZarfInitPackage(version, initPackage) {
   await io.cp(pathToInitPackage, process.cwd());
 }
 
+async function cacheBinary(version) {
+  core.info("Caching the zarf binary...");
+  const zarfBinary = (await getZarfBinary(version)).pathToBinary;
+  const binaryFile = os.platform().startsWith("win") ? "zarf.exe" : "zarf";
+  const toolName = "zarf";
+  const binCachedPath = await tc.cacheFile(zarfBinary, binaryFile, toolName, version);
+  core.info(`Cached the zarf binary at ${ binCachedPath }`);
+
+  return {
+    binCachedPath
+  };
+}
+
+async function addZarfToPath(version) {
+  const zarfBinPath = (await cacheBinary(version)).binCachedPath;
+  core.info(`Adding ${ zarfBinPath } to the $PATH...`);
+  core.addPath(zarfBinPath);
+}
+
 async function setupZarf() {
   try {
     // Get version of zarf from user input
@@ -90,28 +109,24 @@ async function setupZarf() {
     // Get whether we will download an init package from user input
     const initPackage = core.getInput("initPackage");
 
+    const zarfBinary = (await getZarfBinary(version)).pathToBinary;
+
     // Get the zarf binary
-    getZarfBinary(version);
+    await getZarfBinary(version);
 
     // Get the zarf init package
-    getZarfInitPackage(version, initPackage);
+    await getZarfInitPackage(version, initPackage);
 
     // Add read/write/execute permissions to zarf artifacts
     core.info("Adding read/write/execute permissions to the zarf binary...");
-    const zarfBinary = (await getZarfBinary(version)).pathToBinary;
     fs.chmodSync(zarfBinary, "700");
 
     // Cache the zarf binary
-    core.info("Caching the zarf binary...");
-    const binaryFile = os.platform().startsWith("win") ? "zarf.exe" : "zarf";
-    const toolName = "zarf";
-    const binCachedPath = await tc.cacheFile(zarfBinary, binaryFile, toolName, version);
-    core.info(`Cached the zarf binary at ${ binCachedPath }`);
+    await cacheBinary(version);
 
     // Expose the zarf binary by adding it to the $PATH environment variable
-    core.info(`Adding ${ binCachedPath } to the $PATH...`);
-    core.addPath(binCachedPath);
-    
+    await addZarfToPath(version);
+
     // Zarf is ready for use
     core.info("Zarf has been successfully installed/configured and is ready to use!");
 
