@@ -10,6 +10,7 @@ If you want to use/test this action, you will have to create your workflows in t
 - uses: ./
   with:
      version: '<version>'
+     initPackage: true
 ```
 
 Once the action is ready to be released publicly, it would be referenced as such:
@@ -18,13 +19,15 @@ Once the action is ready to be released publicly, it would be referenced as such
 - uses: defenseunicorns/setup-zarf@v1
   with:
      version: '<version>'
+     initPackage: true
 ```
 
 ## Inputs
 
-Currently, the only available input that can be passed in from a user is the version of `zarf` to install.
-
-This is not a required input, and will install whatever the default is set to in the [action.yml](https://github.com/defenseunicorns/github-javascript-actions/blob/main/action.yml) file.
+| Inputs         | Required     | Values |
+|:--------------:|:-----------:|:------------:|
+| version        | No          |Semver version (e.g., `0.22.0`)|
+| initPackage    | No          |true/false    |
 
 ## Contributing
 
