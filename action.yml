@@ -5,6 +5,10 @@ inputs:
     description: 'The Version of Zarf to Install'
     required: false
     default: '0.22.1'
+  initPackage:
+    description: 'Download Zarf Init Package'
+    required: false
+    default: 'false'
 runs:
   using: 'node16'
   main: 'dist/index.js'
