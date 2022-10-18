@@ -79,28 +79,18 @@ async function getZarfInitPackage(version) {
   await io.cp(pathToInitPackage, workingDir);
 }
 
-function validateInitPackageInput(downloadInitPackage) {
-
-  if (downloadInitPackage !== "true" && downloadInitPackage !== "false") {
-      core.setFailed("download_init_package is a required input for the setup-zarf action. Available values for download_init_package are 'true' or 'false'. Letters should be all lowercase. Check out the Zarf docs to learn more about zarf init packages - https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package");
-  }
-  
-}
-
 async function setupZarf() {
   try {
     // Get version of zarf from user input
     const version = core.getInput("version");
 
     // Get whether we will download an init package from user input
-    const downloadInitPackage = core.getInput("download_init_package");
+    const downloadInitPackage = core.getBooleanInput("download-init-package");
     
     // Get the zarf init package
-    if (downloadInitPackage == "true") {
+    if (downloadInitPackage === true) {
       await getZarfInitPackage(version);
-    } else {
-      validateInitPackageInput(downloadInitPackage);
-    }
+    } 
 
     // Get the zarf binary
     const zarfBinary = (await getZarfBinary(version)).pathToBinary;
