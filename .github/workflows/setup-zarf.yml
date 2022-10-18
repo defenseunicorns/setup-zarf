@@ -2,7 +2,7 @@ on: [push]
 jobs:
   setup_zarf:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
@@ -22,6 +22,3 @@ jobs:
 
       - name: Zarf Version
         run: zarf version
-
-      - name: Zarf Init
-        run: zarf init
