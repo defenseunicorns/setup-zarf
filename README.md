@@ -36,10 +36,10 @@ Once the action is ready to be released publicly, it would be referenced as such
 - To learn more about Zarf init packages and their use-cases, see the [Zarf docs](https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package)
 
 
-| Inputs         | Required     | Values |
-|:--------------:|:-----------:|:------------:|
-| version        | No          |Semver version (e.g., `0.22.0`)|
-| download-init-package | Yes  |`true` or `false`    |
+| Input                | Required | Values          | Type |
+|:---------------------:|:--------:|:---------------:|:----:|
+| version               | No       |e.g., `0.22.0`   | String
+| download-init-package | Yes      |`true` or `false`| Boolean
 
 ## Contributing
 
