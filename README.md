@@ -2,24 +2,21 @@
 
 Install a specific version of [Zarf](https://github.com/defenseunicorns/zarf) on a GitHub Actions runner.
 
+Optionally, this action will download a zarf init package for you and set it up for `zarf init` to execute against it.
+
+## Experimental ⚠️
+
+This GitHub action is considered experimental because of its early-stage development and lack of proper tests in place yet.
+
+There may be frequent breaking changes to the `main` branch in this stage of development.
+
 ## Usage
 
-If you want to use/test this action, you will have to create your workflows in this same repository and use `./` in the `uses:` field as shown below. This is because it is in a private repository currently. You can view the [workflow in this repository](https://github.com/defenseunicorns/github-javascript-actions/blob/main/.github/workflows/setup-zarf.yml) as an example.
-
 ```yaml
-- uses: ./
-  with:
-     version: '<version>'
-     download-init-package: true
-```
-
-Once the action is ready to be released publicly, it would be referenced as such:
-
-```yaml
-- uses: defenseunicorns/setup-zarf@v1
-  with:
-     version: '<version>'
-     download-init-package: true
+uses: defenseunicorns/setup-zarf@main
+with:
+  version: '<version>' # Optional, accepts a semantic version string
+  download-init-package: true # Required, accepts true or false
 ```
 
 ## Inputs
@@ -37,10 +34,10 @@ Once the action is ready to be released publicly, it would be referenced as such
 - To learn more about Zarf init packages and their use-cases, see the [Zarf docs](https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package)
 
 
-| Input                | Required | Values          | Type |
-|:---------------------:|:--------:|:---------------:|:----:|
-| version               | No       |e.g., `v0.22.1`  | String
-| download-init-package | Yes      |`true` or `false`| Boolean
+| Input                 | Required | Values          | Type    |
+|:---------------------:|:--------:|:---------------:|:-------:|
+| version               | No       |e.g., `v0.22.1`  | String  |
+| download-init-package | Yes      |`true` or `false`| Boolean |
 
 ## Contributing
 
