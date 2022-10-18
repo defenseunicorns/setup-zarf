@@ -26,14 +26,14 @@ Once the action is ready to be released publicly, it would be referenced as such
 
 ### version
 
-- This input is optional
+- Optional
 - Downloads the latest version by default
 - Check out the [Zarf releases page](https://github.com/defenseunicorns/zarf/releases) to see available versions
 
 ### download-init-package
 
-- This input is required
-- To learn more about Zarf init packages and they're use-cases, see the [Zarf docs](https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package)
+- Required
+- To learn more about Zarf init packages and their use-cases, see the [Zarf docs](https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package)
 
 
 | Inputs         | Required     | Values |
