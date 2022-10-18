@@ -15,7 +15,7 @@ jobs:
 
       - name: Setup Zarf
         id: setup_zarf
-        uses: defenseunicorns/setup-zarf@update-package-name
+        uses: defenseunicorns/setup-zarf@main
         with:
           download-init-package: false
           # version: ""
