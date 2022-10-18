@@ -1,5 +1,5 @@
 {
-  "name": "github-javascript-actions",
+  "name": "setup-zarf",
   "version": "1.0.0",
   "description": "A GitHub Action for Installing Zarf",
   "main": "dist/index.js",
@@ -8,7 +8,7 @@
     "lint": "eslint . --fix",
     "all": "npm run lint && npm run build"
   },
-  "repository": "https://github.com/defenseunicorns/github-javascript-actions.git",
+  "repository": "https://github.com/defenseunicorns/setup-zarf.git",
   "author": "Defense Unicorns",
   "license": "MIT",
   "dependencies": {
