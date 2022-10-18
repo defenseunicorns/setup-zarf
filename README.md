@@ -10,7 +10,7 @@ If you want to use/test this action, you will have to create your workflows in t
 - uses: ./
   with:
      version: '<version>'
-     download_init_package: true
+     download-init-package: true
 ```
 
 Once the action is ready to be released publicly, it would be referenced as such:
@@ -19,7 +19,7 @@ Once the action is ready to be released publicly, it would be referenced as such
 - uses: defenseunicorns/setup-zarf@v1
   with:
      version: '<version>'
-     download_init_package: true
+     download-init-package: true
 ```
 
 ## Inputs
@@ -30,7 +30,7 @@ Once the action is ready to be released publicly, it would be referenced as such
 - Downloads the latest version by default
 - Check out the [Zarf releases page](https://github.com/defenseunicorns/zarf/releases) to see available versions
 
-### download_init_package
+### download-init-package
 
 - This input is required
 - To learn more about Zarf init packages and they're use-cases, see the [Zarf docs](https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package)
@@ -39,7 +39,7 @@ Once the action is ready to be released publicly, it would be referenced as such
 | Inputs         | Required     | Values |
 |:--------------:|:-----------:|:------------:|
 | version        | No          |Semver version (e.g., `0.22.0`)|
-| download_init_package | Yes  |`true` or `false`    |
+| download-init-package | Yes  |`true` or `false`    |
 
 ## Contributing
 
