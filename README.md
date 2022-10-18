@@ -27,7 +27,7 @@ Once the action is ready to be released publicly, it would be referenced as such
 ### version
 
 - Optional
-- Downloads the latest version by default
+- If left unset, it will download the default version in the [action.yml](https://github.com/defenseunicorns/github-javascript-actions/blob/main/action.yml)
 - Check out the [Zarf releases page](https://github.com/defenseunicorns/zarf/releases) to see available versions
 
 ### download-init-package
