@@ -17,7 +17,7 @@ jobs:
         id: setup_zarf
         uses: ./
         with:
-          download-init-package: true
+          download-init-package: false
           # version: ""
 
       - name: Zarf Version
