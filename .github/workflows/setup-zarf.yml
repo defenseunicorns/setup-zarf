@@ -24,4 +24,4 @@ jobs:
             k3d cluster create
 
       - name: Zarf Init
-        run: zarf init
+        run: zarf init --confirm
