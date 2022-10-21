@@ -26,16 +26,6 @@ jobs:
       - name: Zarf Init
         run: zarf init --components git-server --confirm
 
-      - name: Create Zarf Package
-        run: |
-            git clone https://github.com/defenseunicorns/zarf.git
-            mv zarf/packages/big-bang-core .
-            rm -rf zarf/
-            zarf package create big-bang-core --confirm
-      
-      - name: Deploy Zarf Package
-        run: zarf package deploy --confirm
-
       - name: Get k8s resources
         run: |
             curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
