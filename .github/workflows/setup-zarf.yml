@@ -17,6 +17,9 @@ jobs:
       - name: Zarf Version
         run: zarf version
 
+      - name: Colima start
+        run: colima start
+
       - name: Create k3d Cluster
         run: |
             curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
