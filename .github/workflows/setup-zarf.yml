@@ -17,11 +17,27 @@ jobs:
       - name: Zarf Version
         run: zarf version
 
-      - name: k3d cluster
+      - name: Create k3d Cluster
         run: |
             curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
             k3d --version
             k3d cluster create
 
       - name: Zarf Init
-        run: zarf init --confirm
+        run: zarf init --components git-server --confirm
+
+      - name: Create Zarf Package
+        run: |
+            git clone https://github.com/defenseunicorns/zarf.git
+            mv zarf/packages/big-bang-core .
+            rm -rf zarf/
+            zarf package create big-bang-core --confirm
+      
+      - name: Deploy Zarf Package
+        run: zarf package deploy --confirm
+
+      - name: Get k8s resources
+        run: |
+            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x ./kubectl
+            kubectl get all --all-namespaces
