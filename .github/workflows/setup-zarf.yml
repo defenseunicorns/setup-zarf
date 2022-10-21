@@ -1,6 +1,6 @@
 on: [push]
 jobs:
-  setup_zarf:
+  setup-zarf:
     strategy:
       fail-fast: true
       matrix:
@@ -16,3 +16,9 @@ jobs:
 
       - name: Zarf Version
         run: zarf version
+
+      - name: k3d cluster
+        run: |
+            curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+            k3d --version
+            k3c cluster create
