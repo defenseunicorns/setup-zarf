@@ -4,7 +4,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     name: Setup Zarf
     steps:
@@ -21,4 +21,4 @@ jobs:
         run: |
             curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
             k3d --version
-            k3c cluster create
+            k3d cluster create
