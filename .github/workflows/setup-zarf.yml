@@ -11,7 +11,7 @@ jobs:
       - name: Setup Zarf
         uses: defenseunicorns/setup-zarf@main
         with:
-          download-init-package: false
+          download-init-package: true
           # version: ""
 
       - name: Zarf Version
