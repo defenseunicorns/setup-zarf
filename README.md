@@ -33,7 +33,7 @@ with:
 
 | Input                 | Required | Values          |
 |:---------------------:|:--------:|:---------------:|
-| version               | Yes       |e.g., `v0.22.2`  |
+| version               | Yes      |e.g., `v0.22.2`  |
 | download-init-package | Yes      |`true` or `false`|
 
 ## Contributing
