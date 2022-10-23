@@ -3,8 +3,7 @@ description: 'GitHub Action for Installing Zarf'
 inputs:
   version:
     description: 'The Version of Zarf to Install'
-    required: false
-    default: 'v0.22.2'
+    required: true
   download-init-package:
     description: 'Download Zarf Init Package'
     required: true
