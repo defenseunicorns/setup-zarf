@@ -20,7 +20,7 @@ jobs:
             k3d cluster create
 
       - name: Zarf Init
-        run: zarf init --components git-server --confirm
+        run: zarf init --confirm
 
       - name: Get k8s resources
         run: |
