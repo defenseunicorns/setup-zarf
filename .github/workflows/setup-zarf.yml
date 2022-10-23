@@ -8,7 +8,7 @@ jobs:
         uses: defenseunicorns/setup-zarf@main
         with:
           download-init-package: true
-          # version: ""
+          version: v0.22.2
 
       - name: Zarf Version
         run: zarf version
