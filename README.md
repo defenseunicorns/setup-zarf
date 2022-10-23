@@ -6,26 +6,23 @@ Optionally, this action will download a zarf init package for you and set it up 
 
 ## Experimental ⚠️
 
-This GitHub action is considered experimental because of its early-stage development and lack of proper tests in place yet.
-
-There may be frequent breaking changes to the `main` branch in this stage of development.
+This GitHub action is considered experimental because of its early-stage development.
 
 ## Usage
 
 ```yaml
 uses: defenseunicorns/setup-zarf@main
 with:
-  version: '<version>' # Optional, accepts a semantic version string
-  download-init-package: true # Required, accepts true or false
+  version: <version> # Required
+  download-init-package: true # Required
 ```
 
 ## Inputs
 
 ### version
 
-- Optional
-- If left unset, it will download the default version in the [action.yml](https://github.com/defenseunicorns/github-javascript-actions/blob/main/action.yml)
-- ***Hint:*** Include the `v` in your version string (e.g., `v0.22.1`)
+- Required
+- ***Note:*** Include the `v` in your version (e.g., `v0.22.2`)
 - Check out the [Zarf releases page](https://github.com/defenseunicorns/zarf/releases) to see available versions
 
 ### download-init-package
@@ -34,10 +31,10 @@ with:
 - To learn more about Zarf init packages and their use-cases, see the [Zarf docs](https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package)
 
 
-| Input                 | Required | Values          | Type    |
-|:---------------------:|:--------:|:---------------:|:-------:|
-| version               | No       |e.g., `v0.22.1`  | String  |
-| download-init-package | Yes      |`true` or `false`| Boolean |
+| Input                 | Required | Values          |
+|:---------------------:|:--------:|:---------------:|
+| version               | Yes      |e.g., `v0.22.2`  |
+| download-init-package | Yes      |`true` or `false`|
 
 ## Contributing
 
@@ -64,7 +61,5 @@ This project utilizes a static code analysis tool called [eslint](https://eslint
 ### Package Scripts
 
 When changes are made to the javascript source code, run `npm run all` to execute `eslint` against the code and recompile the code into the `dist/index.js` file.
-
-Ideally, this would be executed as a pre-commit hook, or in CI in the future.
 
 &nbsp;
