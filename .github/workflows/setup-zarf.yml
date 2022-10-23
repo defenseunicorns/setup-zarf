@@ -1,18 +1,29 @@
 on: [push]
 jobs:
-  setup_zarf:
-    strategy:
-      fail-fast: true
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  setup-zarf:
+    runs-on: ubuntu-latest
     name: Setup Zarf
     steps:
       - name: Setup Zarf
         uses: defenseunicorns/setup-zarf@main
         with:
-          download-init-package: false
+          download-init-package: true
           # version: ""
 
       - name: Zarf Version
         run: zarf version
+
+      - name: Create k3d Cluster
+        run: |
+            curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+            k3d --version
+            k3d cluster create
+
+      - name: Zarf Init
+        run: zarf init --components git-server --confirm
+
+      - name: Get k8s resources
+        run: |
+            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x ./kubectl
+            kubectl get all --all-namespaces
