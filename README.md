@@ -2,7 +2,9 @@
 
 Install a specific version of [Zarf](https://github.com/defenseunicorns/zarf) on a GitHub Actions runner.
 
-Optionally, this action will download a zarf init package for you and set it up for `zarf init` to execute against it.
+This action can also download a zarf init package for you and set it up to run `zarf init` and initialize a zarf-managed cluster.
+
+To learn more about Zarf init packages and their use-cases, see the [Zarf docs](https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package).
 
 ## Experimental ⚠️
 
@@ -28,7 +30,6 @@ with:
 ### download-init-package
 
 - Required
-- To learn more about Zarf init packages and their use-cases, see the [Zarf docs](https://docs.zarf.dev/docs/user-guide/zarf-packages/the-zarf-init-package)
 
 
 | Input                 | Required | Values          |
