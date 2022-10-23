@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "A GitHub Action for Installing Zarf",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "ncc build index.js -o dist --source-map --license LICENSE",
     "lint": "eslint . --fix",
+    "test": "jest",
     "all": "npm run lint && npm run build"
   },
   "repository": "https://github.com/defenseunicorns/setup-zarf.git",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@vercel/ncc": "^0.34.0",
-    "eslint": "^8.25.0"
+    "eslint": "^8.25.0",
+    "jest": "^29.2.1"
   }
 }

@@ -1,14 +1,14 @@
 {
     "env": {
-        "commonjs": true,
-        "es2021": true,
+        "es2022": true,
         "node": true
     },
     "extends": "eslint:recommended",
     "overrides": [
     ],
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "module"
     },
     "rules": {
         "linebreak-style": [
