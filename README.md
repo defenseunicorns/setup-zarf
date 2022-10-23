@@ -25,7 +25,7 @@ with:
 
 - Optional
 - If left unset, it will download the default version in the [action.yml](https://github.com/defenseunicorns/github-javascript-actions/blob/main/action.yml)
-- ***Hint:*** Include the `v` in your version string (e.g., `v0.22.1`)
+- ***Note:*** Include the `v` in your version string (e.g., `v0.22.1`)
 - Check out the [Zarf releases page](https://github.com/defenseunicorns/zarf/releases) to see available versions
 
 ### download-init-package
