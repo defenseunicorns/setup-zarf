@@ -7,8 +7,8 @@
   "scripts": {
     "build": "ncc build index.js -o dist --source-map --license LICENSE",
     "lint": "eslint . --fix",
-    "test": "jest",
-    "all": "npm run lint && npm run build"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "all": "npm run lint && npm test && npm run build"
   },
   "repository": "https://github.com/defenseunicorns/setup-zarf.git",
   "author": "Defense Unicorns",

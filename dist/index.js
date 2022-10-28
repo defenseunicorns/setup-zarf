@@ -6692,17 +6692,22 @@ function mapOS(os) {
   return mappings[os] || os;
 }
 
-async function getZarfBinary(version) {
-  // If we're on Windows, then the executable ends with .exe
-  const exeSuffix = external_os_.platform().startsWith("win") ? ".exe" : "";
+function helloWorld() {
+  return "Hello World";
+}
 
+function getZarfBinaryLink(platform, arch, version) {
+  // If we're on Windows, then the executable ends with .exe
+  const exeSuffix = platform.startsWith("win") ? ".exe" : "";
+  const filename = `zarf_${ version }_${ mapOS(platform) }_${ mapArch(arch) }${ exeSuffix }`;
+  return `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ filename }`;
+}
+
+async function getZarfBinary(version) {
+  // Set the path where the zarf binary will be installed
   const platform = external_os_.platform();
   const arch = external_os_.arch();
-
-  const filename = `zarf_${ version }_${ mapOS(platform) }_${ mapArch(arch) }${ exeSuffix }`;
-  const binaryURL = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ filename }`;
-
-  // Set the path where the zarf binary will be installed
+  const binaryURL = getZarfBinaryLink(platform, arch);
   const homeDirectory = external_os_.homedir();
   const binPath = external_os_.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
   const installPath = external_path_.join(homeDirectory, binPath);
