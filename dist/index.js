@@ -6726,8 +6726,12 @@ async function getZarfBinary(arch, installPath, platform) {
   const pathToBinary = await tool_cache.downloadTool(binaryURL, installPath);
   lib_core.info(`Successfully downloaded ${ binaryURL }`);
   lib_core.info(`The zarf binary is at ${ pathToBinary }`);
-
   return pathToBinary;
+}
+
+async function addPermissionsToBinary(zarfBinary) {
+  lib_core.info("Adding read/write/execute permissions to the zarf binary...");
+  external_fs_.chmodSync(zarfBinary, "700");
 }
 
 async function getZarfInitPackage(initPackagePath, tarball, version) {
@@ -6757,10 +6761,7 @@ async function setupZarf(pathToInitPackage) {
     }
 
     const zarfBinary = (await getZarfBinary(version)).pathToBinary;
-
-    // Add read/write/execute permissions to the zarf binary
-    lib_core.info("Adding read/write/execute permissions to the zarf binary...");
-    external_fs_.chmodSync(zarfBinary, "700");
+    addPermissionsToBinary(zarfBinary);
 
     // Cache the zarf binary
     lib_core.info("Caching the zarf binary...");
@@ -6775,6 +6776,8 @@ async function setupZarf(pathToInitPackage) {
     
     // Zarf is ready for use
     lib_core.info("Zarf has been successfully installed/configured and is ready to use!");
+
+    return zarfBinary;
 
   } catch(error) {
       lib_core.setFailed(error.message);
