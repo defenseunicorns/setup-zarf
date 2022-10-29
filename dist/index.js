@@ -6740,6 +6740,13 @@ async function cacheZarfBinary(zarfBinary, version) {
   const toolName = "zarf";
   const binCachedPath = await tool_cache.cacheFile(zarfBinary, binaryFile, toolName, version);
   lib_core.info(`Cached the zarf binary at ${ binCachedPath }`);
+
+  return binCachedPath;
+}
+
+async function addBinaryToPath(binCachedPath) {
+  lib_core.info(`Adding ${ binCachedPath } to the $PATH...`);
+  lib_core.addPath(binCachedPath);
 }
 
 async function getZarfInitPackage(initPackagePath, tarball, version) {
@@ -6771,12 +6778,8 @@ async function setupZarf(binCachedPath, pathToInitPackage) {
     const zarfBinary = (await getZarfBinary(version)).pathToBinary;
     addPermissionsToBinary(zarfBinary);
     cacheZarfBinary(zarfBinary, version);
-
-    // Expose the zarf binary by adding it to the $PATH environment variable
-    lib_core.info(`Adding ${ binCachedPath } to the $PATH...`);
-    lib_core.addPath(binCachedPath);
+    addBinaryToPath(binCachedPath);
     
-    // Zarf is ready for use
     lib_core.info("Zarf has been successfully installed/configured and is ready to use!");
 
     return zarfBinary;
