@@ -1,3 +1,5 @@
+name: 'Setup Zarf'
+
 on: [push]
 jobs:
   setup-zarf:
