@@ -19,7 +19,7 @@ test("Map for linux operating system", () => {
     expect(mapOS("linux")).toBe("Linux")
 });
 
-test("Map for Windows operating system", () => {
+test("Map for windows operating system", () => {
     expect(mapOS("win32")).toBe("Windows")
 });
 

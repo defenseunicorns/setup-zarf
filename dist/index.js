@@ -6726,6 +6726,7 @@ async function getZarfBinary(arch, installPath, platform) {
   const pathToBinary = await tool_cache.downloadTool(binaryURL, installPath);
   lib_core.info(`Successfully downloaded ${ binaryURL }`);
   lib_core.info(`The zarf binary is at ${ pathToBinary }`);
+  
   return pathToBinary;
 }
 
