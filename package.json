@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@vercel/ncc": "^0.34.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.25.0",
     "jest": "^29.2.1"
   }
