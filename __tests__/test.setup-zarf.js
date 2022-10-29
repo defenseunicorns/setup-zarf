@@ -24,11 +24,15 @@ test("Map for windows operating system", () => {
 });
 
 test("Install path for macOS zarf binary", () => {
-    expect(setBinaryInstallPath("/Users/runner")).toBe("/Users/runner/.zarf/bin/zarf");
+    if (os.platform() === "darwin") {
+        expect(setBinaryInstallPath("/Users/runner")).toBe("/Users/runner/.zarf/bin/zarf");
+    }
 });
 
 test("Install path for linux zarf binary", () => {
-    expect(setBinaryInstallPath("/home/runner")).toBe("/home/runner/.zarf/bin/zarf");
+    if (os.platform() === "linux") {
+        expect(setBinaryInstallPath("/home/runner")).toBe("/home/runner/.zarf/bin/zarf");
+    }
 });
 
 test("Install path for windows zarf binary", () => {
@@ -38,11 +42,15 @@ test("Install path for windows zarf binary", () => {
 });
 
 test("Install path for macOS zarf init package", () => {
-    expect(setInitPackageInstallPath("amd64", "/Users/runner", "v0.22.2")).toBe("/Users/runner/.zarf/zarf-init-amd64-v0.22.2.tar.zst")
+    if (os.platform() === "darwin") {
+        expect(setInitPackageInstallPath("amd64", "/Users/runner", "v0.22.2")).toBe("/Users/runner/.zarf/zarf-init-amd64-v0.22.2.tar.zst")
+    }
 })
 
 test("Install path for linux zarf init package", () => {
-    expect(setInitPackageInstallPath("amd64", "/home/runner", "v0.22.2")).toBe("/home/runner/.zarf/zarf-init-amd64-v0.22.2.tar.zst")
+    if (os.platform() === "linux") {
+        expect(setInitPackageInstallPath("amd64", "/home/runner", "v0.22.2")).toBe("/home/runner/.zarf/zarf-init-amd64-v0.22.2.tar.zst")
+    }
 })
 
 test("Install path for windows zarf init package", () => {
