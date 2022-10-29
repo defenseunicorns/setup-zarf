@@ -1,3 +1,4 @@
+import os from "os";
 import { mapArch, mapOS, setInstallPath, setZarfBinaryUrl  } from "../lib/setup-zarf";
 
 test("Map for runner architecture", () => {
@@ -25,7 +26,13 @@ test("Install path for linux zarf binary", () => {
 });
 
 test("Install path for windows zarf binary", () => {
-    expect(setInstallPath("C:\\Users\\runneradmin")).toBe("C:\\Users\\runneradmin\\.zarf\\bin\\zarf.exe");
+    if (os.platform() === "win32") {
+        expect(setInstallPath("C:\\Users\\runneradmin")).toBe("C:\\Users\\runneradmin\\.zarf\\bin\\zarf.exe");
+    }
+});
+
+test("Zarf binary download url for macOS amd64", () => {
+    expect(setZarfBinaryUrl("amd64", "darwin", "v0.22.2")).toBe("https://github.com/defenseunicorns/zarf/releases/download/v0.22.2/zarf_v0.22.2_Darwin_amd64");
 });
 
 test("Zarf binary download url for linux amd64", () => {
@@ -34,8 +41,4 @@ test("Zarf binary download url for linux amd64", () => {
 
 test("Zarf binary download url for windows amd64", () => {
     expect(setZarfBinaryUrl("amd64", "win32", "v0.22.2")).toBe("https://github.com/defenseunicorns/zarf/releases/download/v0.22.2/zarf_v0.22.2_Windows_amd64.exe");
-});
-
-test("Zarf binary download url for macOS amd64", () => {
-    expect(setZarfBinaryUrl("amd64", "darwin", "v0.22.2")).toBe("https://github.com/defenseunicorns/zarf/releases/download/v0.22.2/zarf_v0.22.2_Darwin_amd64");
 });
