@@ -6654,7 +6654,7 @@ var __webpack_exports__ = {};
 (() => {
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(2186);
+var lib_core = __nccwpck_require__(2186);
 // EXTERNAL MODULE: ./node_modules/@actions/io/lib/io.js
 var io = __nccwpck_require__(7436);
 // EXTERNAL MODULE: ./node_modules/@actions/tool-cache/lib/tool-cache.js
@@ -6692,36 +6692,37 @@ function mapOS(os) {
   return mappings[os] || os;
 }
 
-function helloWorld() {
-  return "Hello World";
+function runnerSpecs() {
+  const arch = os.arch();
+  const homeDirectory = os.homedir();
+  const platform = os.platform();
+
+  return arch, homeDirectory, platform;
 }
 
-function getZarfBinaryLink(platform, arch, version) {
-  // If we're on Windows, then the executable ends with .exe
+function setInstallPath(homeDirectory, version) {
+  const binPath = os.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
+  const installPath = path.join(homeDirectory, binPath);
+  core.info(`Zarf version ${ version } will be installed at ${ installPath }`);
+
+  return installPath;
+}
+
+function setZarfBinaryUrl(arch, platform, version) {
   const exeSuffix = platform.startsWith("win") ? ".exe" : "";
   const filename = `zarf_${ version }_${ mapOS(platform) }_${ mapArch(arch) }${ exeSuffix }`;
+
   return `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ filename }`;
 }
 
-async function getZarfBinary(version) {
-  // Set the path where the zarf binary will be installed
-  const platform = external_os_.platform();
-  const arch = external_os_.arch();
-  const binaryURL = getZarfBinaryLink(platform, arch);
-  const homeDirectory = external_os_.homedir();
-  const binPath = external_os_.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
-  const installPath = external_path_.join(homeDirectory, binPath);
-  core.info(`Zarf version ${ version } will be installed at ${ installPath }`);
-
-  // Download the zarf binary
-  core.info(`Downloading the zarf binary from ${ binaryURL }...`);
+async function getZarfBinary(arch, installPath, platform) {
+  const binaryURL = setZarfBinaryUrl(platform, arch);
+  lib_core.info(`Downloading the zarf binary from ${ binaryURL }...`);
   const pathToBinary = await tool_cache.downloadTool(binaryURL, installPath);
-  core.info(`Successfully downloaded ${ binaryURL }`);
-  core.info(`The zarf binary is at ${ pathToBinary }`);
+  lib_core.info(`Successfully downloaded ${ binaryURL }`);
+  lib_core.info(`The zarf binary is at ${ pathToBinary }`);
 
-  return {
-    pathToBinary
-  };
+  return pathToBinary;
 }
 
 async function getZarfInitPackage(version) {
@@ -6732,27 +6733,27 @@ async function getZarfInitPackage(version) {
   // Set the path where the zarf init package will be installed
   const homeDirectory = external_os_.homedir();
   const initPackagePath = external_path_.join(homeDirectory, ".zarf", tarball);
-  core.info(`The zarf init package ${ tarball } will be installed at ${ initPackagePath }`);
+  lib_core.info(`The zarf init package ${ tarball } will be installed at ${ initPackagePath }`);
 
   // Download the zarf init package
-  core.info(`Downloading the zarf init package from ${ initPackageURL }...`);
+  lib_core.info(`Downloading the zarf init package from ${ initPackageURL }...`);
   const pathToInitPackage = await tool_cache.downloadTool(initPackageURL, initPackagePath);
-  core.info(`Successfully downloaded ${ initPackageURL }`);
-  core.info(`The zarf init package is at ${ pathToInitPackage }`);
+  lib_core.info(`Successfully downloaded ${ initPackageURL }`);
+  lib_core.info(`The zarf init package is at ${ pathToInitPackage }`);
 
   // Copy the init package to the current working directory
   const workingDir = process.cwd();
-  core.info(`Copying the zarf init package from ${ pathToInitPackage } to ${ workingDir }...`);
+  lib_core.info(`Copying the zarf init package from ${ pathToInitPackage } to ${ workingDir }...`);
   await io.cp(pathToInitPackage, workingDir);
 }
 
 async function setupZarf() {
   try {
     // Get version of zarf from user input
-    const version = core.getInput("version");
+    const version = lib_core.getInput("version");
 
     // Get whether we will download an init package from user input
-    const downloadInitPackage = core.getBooleanInput("download-init-package");
+    const downloadInitPackage = lib_core.getBooleanInput("download-init-package");
     
     // Get the zarf init package
     if (downloadInitPackage === true) {
@@ -6763,25 +6764,25 @@ async function setupZarf() {
     const zarfBinary = (await getZarfBinary(version)).pathToBinary;
 
     // Add read/write/execute permissions to the zarf binary
-    core.info("Adding read/write/execute permissions to the zarf binary...");
+    lib_core.info("Adding read/write/execute permissions to the zarf binary...");
     external_fs_.chmodSync(zarfBinary, "700");
 
     // Cache the zarf binary
-    core.info("Caching the zarf binary...");
+    lib_core.info("Caching the zarf binary...");
     const binaryFile = external_os_.platform().startsWith("win") ? "zarf.exe" : "zarf";
     const toolName = "zarf";
     const binCachedPath = await tool_cache.cacheFile(zarfBinary, binaryFile, toolName, version);
-    core.info(`Cached the zarf binary at ${ binCachedPath }`);
+    lib_core.info(`Cached the zarf binary at ${ binCachedPath }`);
 
     // Expose the zarf binary by adding it to the $PATH environment variable
-    core.info(`Adding ${ binCachedPath } to the $PATH...`);
-    core.addPath(binCachedPath);
+    lib_core.info(`Adding ${ binCachedPath } to the $PATH...`);
+    lib_core.addPath(binCachedPath);
     
     // Zarf is ready for use
-    core.info("Zarf has been successfully installed/configured and is ready to use!");
+    lib_core.info("Zarf has been successfully installed/configured and is ready to use!");
 
   } catch(error) {
-      core.setFailed(error.message);
+      lib_core.setFailed(error.message);
   }
 }
 
