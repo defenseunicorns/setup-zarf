@@ -6666,12 +6666,9 @@ var external_os_ = __nccwpck_require__(2037);
 // EXTERNAL MODULE: external "path"
 var external_path_ = __nccwpck_require__(1017);
 ;// CONCATENATED MODULE: ./lib/setup-zarf.js
-// External packages
 
 
 
-
-// Node.js core packages
 
 
 
@@ -6700,12 +6697,20 @@ function runnerSpecs() {
   return arch, homeDirectory, platform;
 }
 
-function setInstallPath(homeDirectory, version) {
+function setBinaryInstallPath(homeDirectory, version) {
   const binPath = os.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
   const installPath = path.join(homeDirectory, binPath);
   core.info(`Zarf version ${ version } will be installed at ${ installPath }`);
 
   return installPath;
+}
+
+function setInitPackageInstallPath(arch, homeDirectory, version) {
+  const tarball = `zarf-init-${ mapArch(arch) }-${ version }.tar.zst`;
+  const initPackagePath = path.join(homeDirectory, ".zarf", tarball);
+  core.info(`The zarf init package ${ tarball } will be installed at ${ initPackagePath }`);
+
+  return tarball, initPackagePath;
 }
 
 function setZarfBinaryUrl(arch, platform, version) {
@@ -6725,15 +6730,8 @@ async function getZarfBinary(arch, installPath, platform) {
   return pathToBinary;
 }
 
-async function getZarfInitPackage(version) {
-  const arch = external_os_.arch();
-  const tarball = `zarf-init-${ mapArch(arch) }-${ version }.tar.zst`;
+async function getZarfInitPackage(initPackagePath, tarball, version) {
   const initPackageURL = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ tarball }`;
-
-  // Set the path where the zarf init package will be installed
-  const homeDirectory = external_os_.homedir();
-  const initPackagePath = external_path_.join(homeDirectory, ".zarf", tarball);
-  lib_core.info(`The zarf init package ${ tarball } will be installed at ${ initPackagePath }`);
 
   // Download the zarf init package
   lib_core.info(`Downloading the zarf init package from ${ initPackageURL }...`);
