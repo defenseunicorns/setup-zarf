@@ -6730,7 +6730,7 @@ async function getZarfBinary(arch, installPath, platform) {
   return pathToBinary;
 }
 
-async function addPermissionsToBinary(zarfBinary) {
+function addPermissionsToBinary(zarfBinary) {
   lib_core.info("Adding read/write/execute permissions to the zarf binary...");
   external_fs_.chmodSync(zarfBinary, "700");
 }
@@ -6745,7 +6745,7 @@ async function cacheZarfBinary(zarfBinary, version) {
   return binCachedPath;
 }
 
-async function addBinaryToPath(binCachedPath) {
+function addBinaryToPath(binCachedPath) {
   lib_core.info(`Adding ${ binCachedPath } to the $PATH...`);
   lib_core.addPath(binCachedPath);
 }
@@ -6760,30 +6760,28 @@ async function getZarfInitPackage(initPackagePath, tarball, version) {
   return pathToInitPackage;
 }
 
-async function copyInitPackageToWorkingDir(pathToInitPackage) {
+function copyInitPackageToWorkingDir(pathToInitPackage) {
   const workingDir = process.cwd();
   lib_core.info(`Copying the zarf init package from ${ pathToInitPackage } to ${ workingDir }...`);
-  await io.cp(pathToInitPackage, workingDir);
+  io.cp(pathToInitPackage, workingDir);
 }
 
-async function setupZarf(binCachedPath, pathToInitPackage) {
+async function setupZarf(binCachedPath, initPackagePath, pathToInitPackage, tarball) {
   try {
     const version = lib_core.getInput("version");
     const downloadInitPackage = lib_core.getBooleanInput("download-init-package");
     
     if (downloadInitPackage === true) {
-      await getZarfInitPackage(version);
-      await copyInitPackageToWorkingDir(pathToInitPackage);
+      await getZarfInitPackage(initPackagePath, tarball, version);
+      copyInitPackageToWorkingDir(pathToInitPackage);
     }
 
     const zarfBinary = (await getZarfBinary(version)).pathToBinary;
-    await addPermissionsToBinary(zarfBinary);
-    await cacheZarfBinary(zarfBinary, version);
-    await addBinaryToPath(binCachedPath);
+    addPermissionsToBinary(zarfBinary);
+    cacheZarfBinary(zarfBinary, version);
+    addBinaryToPath(binCachedPath);
     
     lib_core.info("Zarf has been successfully installed/configured and is ready to use!");
-
-    return { version, zarfBinary };
 
   } catch(error) {
       lib_core.setFailed(error.message);
