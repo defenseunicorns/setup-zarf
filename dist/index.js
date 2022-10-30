@@ -6712,7 +6712,6 @@ function setBinaryInstallPath(homeDirectory, version) {
 function setInitPackageInstallPath(arch, homeDirectory, version) {
   const tarball = `zarf-init-${ mapArch(arch) }-${ version }.tar.zst`;
   const initPackagePath = path.join(homeDirectory, ".zarf", tarball);
-  core.info(`The zarf init package ${ tarball } will be installed at ${ initPackagePath }`);
 
   return { 
     tarball,
@@ -6759,31 +6758,35 @@ function addBinaryToPath(binCachedPath) {
 
 function getZarfInitPackage(initPackagePath, tarball, version) {
   const initPackageURL = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ tarball }`;
-  lib_core.info(`Downloading the zarf init package from ${ initPackageURL }...`);
   const pathToInitPackage = tool_cache.downloadTool(initPackageURL, initPackagePath);
   lib_core.info(`Successfully downloaded ${ initPackageURL }`);
   lib_core.info(`The zarf init package is at ${ pathToInitPackage }`);
 
-  return pathToInitPackage;
+  return {
+    pathToInitPackage,
+    initPackageURL
+  };
 }
 
 function copyInitPackageToWorkingDir(pathToInitPackage) {
   const workingDir = process.cwd();
-  lib_core.info(`Copying the zarf init package from ${ pathToInitPackage } to ${ workingDir }...`);
   io.cp(pathToInitPackage, workingDir);
 }
 
-async function setupZarf(binCachedPath, initPackagePath, pathToInitPackage, tarball) {
+async function setupZarf(binCachedPath, initPackagePath, initPackageURL, pathToInitPackage, tarball, workingDir) {
   try {
     const version = lib_core.getInput("version");
     const downloadInitPackage = lib_core.getBooleanInput("download-init-package");
     
     if (downloadInitPackage === true) {
-      await getZarfInitPackage(initPackagePath, tarball, version);
+      lib_core.info(`The zarf init package ${ tarball } will be installed at ${ initPackagePath }`);
+      lib_core.info(`Downloading the zarf init package from ${ initPackageURL }...`);
+      getZarfInitPackage(initPackagePath, tarball, version);
+      lib_core.info(`Copying the zarf init package from ${ pathToInitPackage } to ${ workingDir }...`);
       copyInitPackageToWorkingDir(pathToInitPackage);
     }
 
-    const zarfBinary = (await getZarfBinary(version)).pathToBinary;
+    const zarfBinary = getZarfBinary(version).pathToBinary;
     addPermissionsToBinary(zarfBinary);
     await cacheZarfBinary(zarfBinary, version);
     addBinaryToPath(binCachedPath);
