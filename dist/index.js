@@ -6726,8 +6726,8 @@ function setZarfBinaryUrl(arch, platform, version) {
   return `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ filename }`;
 }
 
-async function getZarfBinary(arch, installPath, platform) {
-  const binaryURL = setZarfBinaryUrl(platform, arch);
+async function getZarfBinary(arch, installPath, platform, version) {
+  const binaryURL = setZarfBinaryUrl(platform, arch, version);
   lib_core.info(`Downloading the zarf binary from ${ binaryURL }...`);
   const pathToBinary = await tool_cache.downloadTool(binaryURL, installPath);
   lib_core.info(`Successfully downloaded ${ binaryURL }`);
@@ -6773,7 +6773,7 @@ async function copyInitPackageToWorkingDir(pathToInitPackage) {
   await io.cp(pathToInitPackage, workingDir);
 }
 
-async function setupZarf(binCachedPath, initPackagePath, pathToInitPackage, tarball) {
+async function setupZarf(arch, binCachedPath, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
   try {
     const version = lib_core.getInput("version");
     const downloadInitPackage = lib_core.getBooleanInput("download-init-package");
@@ -6783,7 +6783,7 @@ async function setupZarf(binCachedPath, initPackagePath, pathToInitPackage, tarb
       await copyInitPackageToWorkingDir(pathToInitPackage);
     }
 
-    const zarfBinary = getZarfBinary(version).pathToBinary;
+    const zarfBinary = (await getZarfBinary(arch, installPath, platform, version)).pathToBinary;
     addPermissionsToBinary(zarfBinary);
     await cacheZarfBinary(zarfBinary, version);
     addBinaryToPath(binCachedPath);
