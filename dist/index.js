@@ -6783,7 +6783,7 @@ async function setupZarf(binCachedPath, pathToInitPackage) {
     
     lib_core.info("Zarf has been successfully installed/configured and is ready to use!");
 
-    return zarfBinary;
+    return { version, zarfBinary };
 
   } catch(error) {
       lib_core.setFailed(error.message);
