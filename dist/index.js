@@ -6694,7 +6694,7 @@ function runnerSpecs() {
   const homeDirectory = os.homedir();
   const platform = os.platform();
 
-  return arch, homeDirectory, platform;
+  return { arch, homeDirectory, platform };
 }
 
 function setBinaryInstallPath(homeDirectory, version) {
@@ -6710,7 +6710,7 @@ function setInitPackageInstallPath(arch, homeDirectory, version) {
   const initPackagePath = path.join(homeDirectory, ".zarf", tarball);
   core.info(`The zarf init package ${ tarball } will be installed at ${ initPackagePath }`);
 
-  return tarball, initPackagePath;
+  return initPackagePath;
 }
 
 function setZarfBinaryUrl(arch, platform, version) {
@@ -6773,13 +6773,13 @@ async function setupZarf(binCachedPath, pathToInitPackage) {
     
     if (downloadInitPackage === true) {
       await getZarfInitPackage(version);
-      copyInitPackageToWorkingDir(pathToInitPackage);
+      await copyInitPackageToWorkingDir(pathToInitPackage);
     }
 
     const zarfBinary = (await getZarfBinary(version)).pathToBinary;
-    addPermissionsToBinary(zarfBinary);
-    cacheZarfBinary(zarfBinary, version);
-    addBinaryToPath(binCachedPath);
+    await addPermissionsToBinary(zarfBinary);
+    await cacheZarfBinary(zarfBinary, version);
+    await addBinaryToPath(binCachedPath);
     
     lib_core.info("Zarf has been successfully installed/configured and is ready to use!");
 
