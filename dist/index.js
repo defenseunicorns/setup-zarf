@@ -6710,7 +6710,10 @@ function setInitPackageInstallPath(arch, homeDirectory, version) {
   const initPackagePath = path.join(homeDirectory, ".zarf", tarball);
   core.info(`The zarf init package ${ tarball } will be installed at ${ initPackagePath }`);
 
-  return initPackagePath;
+  return { 
+    tarball,
+    initPackagePath
+  };
 }
 
 function setZarfBinaryUrl(arch, platform, version) {
