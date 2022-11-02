@@ -106,10 +106,7 @@ async function setupZarf(arch, binaryURL, binCachedPath, homeDirectory, initPack
     const version = core.getInput("version");
     const downloadInitPackage = core.getBooleanInput("download-init-package");
     
-    getRunnerSpecs();
-
     if (downloadInitPackage === true) {
-      setInitPackageInstallPath(arch, homeDirectory, version);
       core.debug(`Is ${ tarball } defined or undefined`);
       core.info(`Downloading the zarf init package from ${ initPackageURL }...`);
       await getZarfInitPackage(initPackagePath, tarball, version);
@@ -6853,9 +6850,9 @@ module.exports = require("util");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const { setupZarf } = __nccwpck_require__(9969);
+const setup = __nccwpck_require__(9969);
 
-setupZarf();
+setup();
 })();
 
 module.exports = __webpack_exports__;
