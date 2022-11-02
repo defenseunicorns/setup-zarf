@@ -1,7 +1,7 @@
-import { setupZarf, zarfFileName } from "./setup-zarf";
+import { runnerPlatform, setupZarf } from "./setup-zarf";
 
 async function execute() {
-    await setupZarf(zarfFileName);
+    await setupZarf(runnerPlatform);
 }
 
 execute();

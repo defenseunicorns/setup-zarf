@@ -5,7 +5,18 @@ import { chmodSync } from "fs";
 import * as os from "os";
 import { join } from "path";
 
-export const zarfFileName = __filename;
+
+let platform = "";
+
+if (os.platform() === "darwin") {
+  platform = `${ mapOS().macMap }_${ mapArch() }`
+} else if (os.platform() === "linux") {
+  platform = `${ mapOS().linuxMap }_${ mapArch() }`;
+} else if (os.platform() === "win32") {
+  platform = `${ mapOS().windowsMap }_${ mapArch() }`;
+}
+
+export const runnerPlatform = platform;
 
 export function mapArch() {
   let archMap = new Map();
@@ -28,21 +39,7 @@ export function mapOS() {
   return { macMap, linuxMap, windowsMap };
 }
 
-function getRunnerPlatform(version: string) {
-  let filename = "";
-
-  if (os.platform() === "darwin") {
-    filename = `zarf_${ version }_${ mapOS().macMap }_${ mapArch() }`;
-  } else if (os.platform() === "linux") {
-    filename = `zarf_${ version }_${ mapOS().linuxMap }_${ mapArch() }`;
-  } else if (os.platform() === "win32") {
-    filename = `zarf_${ version }_${ mapOS().windowsMap }_${ mapArch() }`;
-  }
-
-  return filename;
-}
-
-export async function setupZarf(zarfFileName: string) {
+export async function setupZarf(runnerPlatform: string) {
   try {
     // Get user input
     const version = core.getInput("version");
@@ -58,8 +55,9 @@ export async function setupZarf(zarfFileName: string) {
     }
 
     // Download zarf binary
+    const exePrefix = `zarf_${ version }_`
     const exeSuffix = os.platform().startsWith("win") ? ".exe" : "";
-    const binary = zarfFileName + exeSuffix;
+    const binary = exePrefix + runnerPlatform + exeSuffix;
     const binaryURL = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ binary }`;
     const binPath = os.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
     const installPath = join(os.homedir(), binPath);
@@ -77,6 +75,8 @@ export async function setupZarf(zarfFileName: string) {
     core.addPath(binCachedPath);
     
     core.info("Zarf has been successfully installed/configured and is ready to use!");
+
+    return version;
 
   } catch(error) {
       let errorMessage = "Failed to setup Zarf";

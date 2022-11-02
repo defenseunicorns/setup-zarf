@@ -6523,7 +6523,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const setup_zarf_1 = __nccwpck_require__(2835);
 function execute() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, setup_zarf_1.setupZarf)(setup_zarf_1.zarfFileName);
+        yield (0, setup_zarf_1.setupZarf)(setup_zarf_1.runnerPlatform);
     });
 }
 execute();
@@ -6568,14 +6568,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.setupZarf = exports.mapOS = exports.mapArch = exports.zarfFileName = void 0;
+exports.setupZarf = exports.mapOS = exports.mapArch = exports.runnerPlatform = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const io_1 = __nccwpck_require__(7436);
 const tc = __importStar(__nccwpck_require__(7784));
 const fs_1 = __nccwpck_require__(7147);
 const os = __importStar(__nccwpck_require__(2037));
 const path_1 = __nccwpck_require__(1017);
-exports.zarfFileName = __filename;
+let platform = "";
+if (os.platform() === "darwin") {
+    platform = `${mapOS().macMap}_${mapArch()}`;
+}
+else if (os.platform() === "linux") {
+    platform = `${mapOS().linuxMap}_${mapArch()}`;
+}
+else if (os.platform() === "win32") {
+    platform = `${mapOS().windowsMap}_${mapArch()}`;
+}
+exports.runnerPlatform = platform;
 function mapArch() {
     let archMap = new Map();
     archMap.set("x64", "amd64");
@@ -6594,20 +6604,7 @@ function mapOS() {
     return { macMap, linuxMap, windowsMap };
 }
 exports.mapOS = mapOS;
-function getRunnerPlatform(version) {
-    let filename = "";
-    if (os.platform() === "darwin") {
-        filename = `zarf_${version}_${mapOS().macMap}_${mapArch()}`;
-    }
-    else if (os.platform() === "linux") {
-        filename = `zarf_${version}_${mapOS().linuxMap}_${mapArch()}`;
-    }
-    else if (os.platform() === "win32") {
-        filename = `zarf_${version}_${mapOS().windowsMap}_${mapArch()}`;
-    }
-    return filename;
-}
-function setupZarf(zarfFileName) {
+function setupZarf(runnerPlatform) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // Get user input
@@ -6622,8 +6619,9 @@ function setupZarf(zarfFileName) {
                 yield (0, io_1.cp)(pathToInitPackage, process.cwd());
             }
             // Download zarf binary
+            const exePrefix = `zarf_${version}_`;
             const exeSuffix = os.platform().startsWith("win") ? ".exe" : "";
-            const binary = zarfFileName + exeSuffix;
+            const binary = exePrefix + runnerPlatform + exeSuffix;
             const binaryURL = `https://github.com/defenseunicorns/zarf/releases/download/${version}/${binary}`;
             const binPath = os.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
             const installPath = (0, path_1.join)(os.homedir(), binPath);
@@ -6637,6 +6635,7 @@ function setupZarf(zarfFileName) {
             // Add binary to the $PATH
             core.addPath(binCachedPath);
             core.info("Zarf has been successfully installed/configured and is ready to use!");
+            return version;
         }
         catch (error) {
             let errorMessage = "Failed to setup Zarf";
