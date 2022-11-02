@@ -1,7 +1,12 @@
-import { setupZarf } from "./lib/setup-zarf.js";
+import * as setup from "./lib/setup-zarf.js";
 
-async function setup() {
-    await setupZarf();
+function execute() {
+    setup.mapArch();
+    setup.mapOS();
+    setup.getRunnerSpecs();
+    setup.setBinaryInstallPath();
+    setup.setInitPackageInstallPath();
+    setup.setupZarf();
 }
 
-setup();
+execute();
