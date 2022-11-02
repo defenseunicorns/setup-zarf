@@ -6644,6 +6644,23 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("util");
 /******/ }
 /******/ 
 /************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__nccwpck_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
 /******/ /* webpack/runtime/compat */
 /******/ 
 /******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
@@ -6652,20 +6669,21 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("util");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-
-// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(2186);
-// EXTERNAL MODULE: ./node_modules/@actions/io/lib/io.js
-var io = __nccwpck_require__(7436);
-// EXTERNAL MODULE: ./node_modules/@actions/tool-cache/lib/tool-cache.js
-var tool_cache = __nccwpck_require__(7784);
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(7147);
-// EXTERNAL MODULE: external "os"
-var external_os_ = __nccwpck_require__(2037);
-// EXTERNAL MODULE: external "path"
-var external_path_ = __nccwpck_require__(1017);
-;// CONCATENATED MODULE: ./lib/setup-zarf.js
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "BG": () => (/* binding */ mapArch),
+/* harmony export */   "eG": () => (/* binding */ mapOS),
+/* harmony export */   "s9": () => (/* binding */ getRunnerSpecs),
+/* harmony export */   "DG": () => (/* binding */ setBinaryInstallPath),
+/* harmony export */   "RK": () => (/* binding */ setInitPackageInstallPath),
+/* harmony export */   "sw": () => (/* binding */ setZarfBinaryUrl),
+/* harmony export */   "x1": () => (/* binding */ setupZarf)
+/* harmony export */ });
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
+/* harmony import */ var _actions_io__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(7436);
+/* harmony import */ var _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7784);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(7147);
+/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2037);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(1017);
 
 
 
@@ -6690,9 +6708,9 @@ function mapOS(os) {
 }
 
 function getRunnerSpecs() {
-  const arch = external_os_.arch();
-  const homeDirectory = external_os_.homedir();
-  const platform = external_os_.platform();
+  const arch = os__WEBPACK_IMPORTED_MODULE_4__.arch();
+  const homeDirectory = os__WEBPACK_IMPORTED_MODULE_4__.homedir();
+  const platform = os__WEBPACK_IMPORTED_MODULE_4__.platform();
 
   return { 
     arch,
@@ -6702,16 +6720,16 @@ function getRunnerSpecs() {
 }
 
 function setBinaryInstallPath(homeDirectory, version) {
-  const binPath = external_os_.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
-  const installPath = external_path_.join(homeDirectory, binPath);
-  core.info(`Zarf version ${ version } will be installed at ${ installPath }`);
+  const binPath = os__WEBPACK_IMPORTED_MODULE_4__.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
+  const installPath = path__WEBPACK_IMPORTED_MODULE_5__.join(homeDirectory, binPath);
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Zarf version ${ version } will be installed at ${ installPath }`);
 
   return installPath;
 }
 
 function setInitPackageInstallPath(arch, homeDirectory, version) {
   const tarball = `zarf-init-${ mapArch(arch) }-${ version }.tar.zst`;
-  const initPackagePath = external_path_.join(homeDirectory, ".zarf", tarball);
+  const initPackagePath = path__WEBPACK_IMPORTED_MODULE_5__.join(homeDirectory, ".zarf", tarball);
 
   return { 
     tarball,
@@ -6728,39 +6746,39 @@ function setZarfBinaryUrl(arch, platform, version) {
 
 async function getZarfBinary(arch, installPath, platform, version) {
   const binaryURL = setZarfBinaryUrl(platform, arch, version);
-  core.info(`Downloading the zarf binary from ${ binaryURL }...`);
-  const pathToBinary = await tool_cache.downloadTool(binaryURL, installPath);
-  core.info(`Successfully downloaded ${ binaryURL }`);
-  core.info(`The zarf binary is at ${ pathToBinary }`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Downloading the zarf binary from ${ binaryURL }...`);
+  const pathToBinary = await _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.downloadTool(binaryURL, installPath);
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Successfully downloaded ${ binaryURL }`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`The zarf binary is at ${ pathToBinary }`);
   
   return pathToBinary;
 }
 
 function addPermissionsToBinary(zarfBinary) {
-  core.info("Adding read/write/execute permissions to the zarf binary...");
-  external_fs_.chmodSync(zarfBinary, "700");
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Adding read/write/execute permissions to the zarf binary...");
+  fs__WEBPACK_IMPORTED_MODULE_3__.chmodSync(zarfBinary, "700");
 }
 
 async function cacheZarfBinary(zarfBinary, version) {
-  core.info("Caching the zarf binary...");
-  const binaryFile = external_os_.platform().startsWith("win") ? "zarf.exe" : "zarf";
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Caching the zarf binary...");
+  const binaryFile = os__WEBPACK_IMPORTED_MODULE_4__.platform().startsWith("win") ? "zarf.exe" : "zarf";
   const toolName = "zarf";
-  const binCachedPath = await tool_cache.cacheFile(zarfBinary, binaryFile, toolName, version);
-  core.info(`Cached the zarf binary at ${ binCachedPath }`);
+  const binCachedPath = await _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.cacheFile(zarfBinary, binaryFile, toolName, version);
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Cached the zarf binary at ${ binCachedPath }`);
 
   return binCachedPath;
 }
 
 function addBinaryToPath(binCachedPath) {
-  core.info(`Adding ${ binCachedPath } to the $PATH...`);
-  core.addPath(binCachedPath);
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Adding ${ binCachedPath } to the $PATH...`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.addPath(binCachedPath);
 }
 
 async function getZarfInitPackage(initPackagePath, tarball, version) {
   const initPackageURL = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ tarball }`;
-  const pathToInitPackage = await tool_cache.downloadTool(initPackageURL, initPackagePath);
-  core.info(`Successfully downloaded ${ initPackageURL }`);
-  core.info(`The zarf init package is at ${ pathToInitPackage }`);
+  const pathToInitPackage = await _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.downloadTool(initPackageURL, initPackagePath);
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Successfully downloaded ${ initPackageURL }`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`The zarf init package is at ${ pathToInitPackage }`);
 
   return {
     pathToInitPackage,
@@ -6770,13 +6788,13 @@ async function getZarfInitPackage(initPackagePath, tarball, version) {
 
 async function copyInitPackageToWorkingDir(pathToInitPackage) {
   const workingDir = process.cwd();
-  await io.cp(pathToInitPackage, workingDir);
+  await _actions_io__WEBPACK_IMPORTED_MODULE_1__.cp(pathToInitPackage, workingDir);
 }
 
 async function setupZarf(arch, binCachedPath, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
   try {
-    const version = core.getInput("version");
-    const downloadInitPackage = core.getBooleanInput("download-init-package");
+    const version = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("version");
+    const downloadInitPackage = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("download-init-package");
     
     if (downloadInitPackage === true) {
       await getZarfInitPackage(initPackagePath, tarball, version);
@@ -6788,29 +6806,23 @@ async function setupZarf(arch, binCachedPath, initPackagePath, installPath, path
     await cacheZarfBinary(zarfBinary, version);
     addBinaryToPath(binCachedPath);
     
-    core.info("Zarf has been successfully installed/configured and is ready to use!");
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Zarf has been successfully installed/configured and is ready to use!");
 
   } catch(error) {
-      core.setFailed(error.message);
+      _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
   }
 }
 
-
-
-;// CONCATENATED MODULE: ./index.js
-
-
-function execute() {
-    mapArch();
-    mapOS();
-    getRunnerSpecs();
-    setBinaryInstallPath();
-    setInitPackageInstallPath();
-    setupZarf();
-}
-
-execute();
+setupZarf();
 })();
 
+var __webpack_exports__getRunnerSpecs = __webpack_exports__.s9;
+var __webpack_exports__mapArch = __webpack_exports__.BG;
+var __webpack_exports__mapOS = __webpack_exports__.eG;
+var __webpack_exports__setBinaryInstallPath = __webpack_exports__.DG;
+var __webpack_exports__setInitPackageInstallPath = __webpack_exports__.RK;
+var __webpack_exports__setZarfBinaryUrl = __webpack_exports__.sw;
+var __webpack_exports__setupZarf = __webpack_exports__.x1;
+export { __webpack_exports__getRunnerSpecs as getRunnerSpecs, __webpack_exports__mapArch as mapArch, __webpack_exports__mapOS as mapOS, __webpack_exports__setBinaryInstallPath as setBinaryInstallPath, __webpack_exports__setInitPackageInstallPath as setInitPackageInstallPath, __webpack_exports__setZarfBinaryUrl as setZarfBinaryUrl, __webpack_exports__setupZarf as setupZarf };
 
 //# sourceMappingURL=index.js.map

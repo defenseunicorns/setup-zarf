@@ -5,7 +5,7 @@ import {
     setBinaryInstallPath, 
     setInitPackageInstallPath, 
     setZarfBinaryUrl  
-} from "../lib/setup-zarf";
+} from "../src/setup-zarf.js";
 
 test("Map for runner architecture", () => {
     expect(mapArch("x64")).toBe("amd64")

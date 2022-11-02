@@ -5,14 +5,14 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 
-function mapArch(arch) {
+export function mapArch(arch) {
   const mappings = {
     x64: "amd64"
   };
   return mappings[arch] || arch;
 }
 
-function mapOS(os) {
+export function mapOS(os) {
   const mappings = {
     darwin: "Darwin",
     linux: "Linux",
@@ -21,7 +21,7 @@ function mapOS(os) {
   return mappings[os] || os;
 }
 
-function getRunnerSpecs() {
+export function getRunnerSpecs() {
   const arch = os.arch();
   const homeDirectory = os.homedir();
   const platform = os.platform();
@@ -33,7 +33,7 @@ function getRunnerSpecs() {
   };
 }
 
-function setBinaryInstallPath(homeDirectory, version) {
+export function setBinaryInstallPath(homeDirectory, version) {
   const binPath = os.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
   const installPath = path.join(homeDirectory, binPath);
   core.info(`Zarf version ${ version } will be installed at ${ installPath }`);
@@ -41,7 +41,7 @@ function setBinaryInstallPath(homeDirectory, version) {
   return installPath;
 }
 
-function setInitPackageInstallPath(arch, homeDirectory, version) {
+export function setInitPackageInstallPath(arch, homeDirectory, version) {
   const tarball = `zarf-init-${ mapArch(arch) }-${ version }.tar.zst`;
   const initPackagePath = path.join(homeDirectory, ".zarf", tarball);
 
@@ -51,7 +51,7 @@ function setInitPackageInstallPath(arch, homeDirectory, version) {
   };
 }
 
-function setZarfBinaryUrl(arch, platform, version) {
+export function setZarfBinaryUrl(arch, platform, version) {
   const exeSuffix = platform.startsWith("win") ? ".exe" : "";
   const filename = `zarf_${ version }_${ mapOS(platform) }_${ mapArch(arch) }${ exeSuffix }`;
 
@@ -105,7 +105,7 @@ async function copyInitPackageToWorkingDir(pathToInitPackage) {
   await io.cp(pathToInitPackage, workingDir);
 }
 
-async function setupZarf(arch, binCachedPath, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
+export async function setupZarf(arch, binCachedPath, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
   try {
     const version = core.getInput("version");
     const downloadInitPackage = core.getBooleanInput("download-init-package");
@@ -127,12 +127,4 @@ async function setupZarf(arch, binCachedPath, initPackagePath, installPath, path
   }
 }
 
-export { 
-  mapArch, 
-  mapOS,
-  getRunnerSpecs,
-  setupZarf,
-  setBinaryInstallPath, 
-  setInitPackageInstallPath, 
-  setZarfBinaryUrl 
-};
+setupZarf();
