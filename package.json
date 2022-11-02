@@ -4,7 +4,7 @@
   "description": "A GitHub Action for Installing Zarf",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build index.js -o dist --source-map --license LICENSE",
+    "build": "ncc build index.js -o dist --license LICENSE",
     "lint": "eslint . --fix",
     "test": "cross-env jest",
     "all": "npm run lint && npm test && npm run build"
