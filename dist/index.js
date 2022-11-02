@@ -6852,7 +6852,7 @@ var __webpack_exports__ = {};
 (() => {
 const setup = __nccwpck_require__(9969);
 
-setup();
+setup;
 })();
 
 module.exports = __webpack_exports__;
