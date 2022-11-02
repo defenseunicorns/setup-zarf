@@ -109,6 +109,8 @@ export async function setupZarf(arch, binCachedPath, homeDirectory, initPackageP
   try {
     const version = core.getInput("version");
     const downloadInitPackage = core.getBooleanInput("download-init-package");
+
+    getRunnerSpecs();
     
     if (downloadInitPackage === true) {
       setInitPackageInstallPath(arch, homeDirectory, version);
