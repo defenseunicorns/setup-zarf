@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "A GitHub Action for Installing Zarf",
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
-    "build": "ncc build src/setup-zarf.js -o dist --source-map --license LICENSE",
+    "build": "ncc build index.js -o dist --source-map --license LICENSE",
     "lint": "eslint . --fix",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "cross-env jest",
     "all": "npm run lint && npm test && npm run build"
   },
   "repository": "https://github.com/defenseunicorns/setup-zarf.git",

@@ -1,9 +1,154 @@
-import './sourcemap-register.cjs';import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
-/******/ var __webpack_modules__ = ({
+require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 9969:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__(2186);
+const io = __nccwpck_require__(7436);
+const tc = __nccwpck_require__(7784);
+const fs = __nccwpck_require__(7147);
+const os = __nccwpck_require__(2037);
+const path = __nccwpck_require__(1017);
+
+function mapArch(arch) {
+  const mappings = {
+    x64: "amd64"
+  };
+  return mappings[arch] || arch;
+}
+
+function mapOS(os) {
+  const mappings = {
+    darwin: "Darwin",
+    linux: "Linux",
+    win32: "Windows"
+  };
+  return mappings[os] || os;
+}
+
+function getRunnerSpecs() {
+  const arch = os.arch();
+  const homeDirectory = os.homedir();
+  const platform = os.platform();
+
+  return { 
+    arch,
+    homeDirectory,
+    platform
+  };
+}
+
+function setBinaryInstallPath(homeDirectory, version) {
+  const binPath = os.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
+  const installPath = path.join(homeDirectory, binPath);
+  core.info(`Zarf version ${ version } will be installed at ${ installPath }`);
+
+  return installPath;
+}
+
+function setInitPackageInstallPath(arch, homeDirectory, version) {
+  const tarball = `zarf-init-${ mapArch(arch) }-${ version }.tar.zst`;
+  const initPackagePath = path.join(homeDirectory, ".zarf", tarball);
+
+  return { 
+    tarball,
+    initPackagePath
+  };
+}
+
+function setZarfBinaryUrl(arch, platform, version) {
+  const exeSuffix = platform.startsWith("win") ? ".exe" : "";
+  const filename = `zarf_${ version }_${ mapOS(platform) }_${ mapArch(arch) }${ exeSuffix }`;
+
+  return `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ filename }`;
+}
+
+async function getZarfBinary(arch, installPath, platform, version) {
+  const binaryURL = setZarfBinaryUrl(platform, arch, version);
+  core.info(`Downloading the zarf binary from ${ binaryURL }...`);
+  const pathToBinary = await tc.downloadTool(binaryURL, installPath);
+  core.info(`Successfully downloaded ${ binaryURL }`);
+  core.info(`The zarf binary is at ${ pathToBinary }`);
+  
+  return pathToBinary;
+}
+
+function addPermissionsToBinary(zarfBinary) {
+  core.info("Adding read/write/execute permissions to the zarf binary...");
+  fs.chmodSync(zarfBinary, "700");
+}
+
+async function cacheZarfBinary(zarfBinary, version) {
+  core.info("Caching the zarf binary...");
+  const binaryFile = os.platform().startsWith("win") ? "zarf.exe" : "zarf";
+  const toolName = "zarf";
+  const binCachedPath = await tc.cacheFile(zarfBinary, binaryFile, toolName, version);
+  core.info(`Cached the zarf binary at ${ binCachedPath }`);
+
+  return binCachedPath;
+}
+
+function addBinaryToPath(binCachedPath) {
+  core.info(`Adding ${ binCachedPath } to the $PATH...`);
+  core.addPath(binCachedPath);
+}
+
+async function getZarfInitPackage(initPackagePath, tarball, version) {
+  const initPackageURL = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ tarball }`;
+  const pathToInitPackage = await tc.downloadTool(initPackageURL, initPackagePath);
+  core.info(`Successfully downloaded ${ initPackageURL }`);
+  core.info(`The zarf init package is at ${ pathToInitPackage }`);
+
+  return {
+    pathToInitPackage,
+    initPackageURL
+  };
+}
+
+async function copyInitPackageToWorkingDir(pathToInitPackage) {
+  const workingDir = process.cwd();
+  await io.cp(pathToInitPackage, workingDir);
+}
+
+async function setupZarf(arch, binCachedPath, homeDirectory, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
+  try {
+    const version = core.getInput("version");
+    const downloadInitPackage = core.getBooleanInput("download-init-package");
+    
+    if (downloadInitPackage === true) {
+      await getZarfInitPackage(initPackagePath, tarball, version);
+      await copyInitPackageToWorkingDir(pathToInitPackage);
+    }
+
+    const zarfBinary = (await getZarfBinary(arch, installPath, platform, version)).pathToBinary;
+    addPermissionsToBinary(zarfBinary);
+    await cacheZarfBinary(zarfBinary, version);
+    addBinaryToPath(binCachedPath);
+    
+    core.info("Zarf has been successfully installed/configured and is ready to use!");
+
+  } catch(error) {
+      core.setFailed(error.message);
+  }
+}
+
+module.exports = {
+  getRunnerSpecs,
+  mapArch,
+  mapOS,
+  setBinaryInstallPath,
+  setInitPackageInstallPath,
+  setZarfBinaryUrl,
+  setupZarf
+};
+
+/***/ }),
 
 /***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -102,6 +247,7 @@ function escapeProperty(s) {
 /***/ 2186:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -444,6 +590,7 @@ Object.defineProperty(exports, "toPlatformPath", ({ enumerable: true, get: funct
 /***/ 717:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 // For internal use, subject to change.
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
@@ -508,6 +655,7 @@ exports.prepareKeyValueMessage = prepareKeyValueMessage;
 /***/ 8041:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -591,6 +739,7 @@ exports.OidcClient = OidcClient;
 /***/ 2981:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -655,6 +804,7 @@ exports.toPlatformPath = toPlatformPath;
 /***/ 1327:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -944,6 +1094,7 @@ exports.summary = _summary;
 /***/ 5278:
 /***/ ((__unused_webpack_module, exports) => {
 
+"use strict";
 
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -990,6 +1141,7 @@ exports.toCommandProperties = toCommandProperties;
 /***/ 1514:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -1099,6 +1251,7 @@ exports.getExecOutput = getExecOutput;
 /***/ 8159:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -1723,6 +1876,7 @@ class ExecState extends events.EventEmitter {
 /***/ 5526:
 /***/ (function(__unused_webpack_module, exports) {
 
+"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -1810,6 +1964,7 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 /***/ 6255:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
@@ -2421,6 +2576,7 @@ const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCa
 /***/ 9835:
 /***/ ((__unused_webpack_module, exports) => {
 
+"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.checkBypass = exports.getProxyUrl = void 0;
@@ -2488,6 +2644,7 @@ exports.checkBypass = checkBypass;
 /***/ 1962:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -2671,6 +2828,7 @@ exports.getCmdPath = getCmdPath;
 /***/ 7436:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -3018,6 +3176,7 @@ function copyFile(srcFile, destFile, force) {
 /***/ 2473:
 /***/ (function(module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -3152,6 +3311,7 @@ exports._readLinuxVersionFile = _readLinuxVersionFile;
 /***/ 8279:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -3241,6 +3401,7 @@ exports.RetryHelper = RetryHelper;
 /***/ 7784:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
+"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -5607,6 +5768,7 @@ module.exports = __nccwpck_require__(4219);
 /***/ 4219:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 var net = __nccwpck_require__(1808);
@@ -5878,6 +6040,7 @@ exports.debug = debug; // for test
 /***/ 5840:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -5963,6 +6126,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /***/ 4569:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -5992,6 +6156,7 @@ exports["default"] = _default;
 /***/ 5332:
 /***/ ((__unused_webpack_module, exports) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6006,6 +6171,7 @@ exports["default"] = _default;
 /***/ 2746:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6057,6 +6223,7 @@ exports["default"] = _default;
 /***/ 814:
 /***/ ((__unused_webpack_module, exports) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6071,6 +6238,7 @@ exports["default"] = _default;
 /***/ 807:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6101,6 +6269,7 @@ function rng() {
 /***/ 5274:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6130,6 +6299,7 @@ exports["default"] = _default;
 /***/ 8950:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6175,6 +6345,7 @@ exports["default"] = _default;
 /***/ 8628:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6288,6 +6459,7 @@ exports["default"] = _default;
 /***/ 6409:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6310,6 +6482,7 @@ exports["default"] = _default;
 /***/ 5998:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6394,6 +6567,7 @@ function _default(name, version, hashfunc) {
 /***/ 5122:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6437,6 +6611,7 @@ exports["default"] = _default;
 /***/ 9120:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6459,6 +6634,7 @@ exports["default"] = _default;
 /***/ 6900:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6482,6 +6658,7 @@ exports["default"] = _default;
 /***/ 1595:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -6509,324 +6686,170 @@ exports["default"] = _default;
 /***/ 9491:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("assert");
+"use strict";
+module.exports = require("assert");
 
 /***/ }),
 
 /***/ 2081:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("child_process");
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
 /***/ 6113:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("crypto");
+"use strict";
+module.exports = require("crypto");
 
 /***/ }),
 
 /***/ 2361:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("events");
+"use strict";
+module.exports = require("events");
 
 /***/ }),
 
 /***/ 7147:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("fs");
+"use strict";
+module.exports = require("fs");
 
 /***/ }),
 
 /***/ 3685:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("http");
+"use strict";
+module.exports = require("http");
 
 /***/ }),
 
 /***/ 5687:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("https");
+"use strict";
+module.exports = require("https");
 
 /***/ }),
 
 /***/ 1808:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("net");
+"use strict";
+module.exports = require("net");
 
 /***/ }),
 
 /***/ 2037:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("os");
+"use strict";
+module.exports = require("os");
 
 /***/ }),
 
 /***/ 1017:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("path");
+"use strict";
+module.exports = require("path");
 
 /***/ }),
 
 /***/ 2781:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("stream");
+"use strict";
+module.exports = require("stream");
 
 /***/ }),
 
 /***/ 1576:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("string_decoder");
+"use strict";
+module.exports = require("string_decoder");
 
 /***/ }),
 
 /***/ 9512:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("timers");
+"use strict";
+module.exports = require("timers");
 
 /***/ }),
 
 /***/ 4404:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("tls");
+"use strict";
+module.exports = require("tls");
 
 /***/ }),
 
 /***/ 3837:
 /***/ ((module) => {
 
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("util");
+"use strict";
+module.exports = require("util");
 
 /***/ })
 
-/******/ });
+/******/ 	});
 /************************************************************************/
-/******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
-/******/ 
-/******/ // The require function
-/******/ function __nccwpck_require__(moduleId) {
-/******/ 	// Check if module is in cache
-/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 	if (cachedModule !== undefined) {
-/******/ 		return cachedModule.exports;
-/******/ 	}
-/******/ 	// Create a new module (and put it into the cache)
-/******/ 	var module = __webpack_module_cache__[moduleId] = {
-/******/ 		// no module.id needed
-/******/ 		// no module.loaded needed
-/******/ 		exports: {}
-/******/ 	};
-/******/ 
-/******/ 	// Execute the module function
-/******/ 	var threw = true;
-/******/ 	try {
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
-/******/ 		threw = false;
-/******/ 	} finally {
-/******/ 		if(threw) delete __webpack_module_cache__[moduleId];
-/******/ 	}
-/******/ 
-/******/ 	// Return the exports of the module
-/******/ 	return module.exports;
-/******/ }
-/******/ 
-/************************************************************************/
-/******/ /* webpack/runtime/define property getters */
-/******/ (() => {
-/******/ 	// define getter functions for harmony exports
-/******/ 	__nccwpck_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 			}
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __nccwpck_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
-/******/ 	};
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/hasOwnProperty shorthand */
-/******/ (() => {
-/******/ 	__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/compat */
-/******/ 
-/******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
-/******/ 
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		var threw = true;
+/******/ 		try {
+/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
+/******/ 			threw = false;
+/******/ 		} finally {
+/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
+/******/ 		}
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat */
+/******/ 	
+/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "BG": () => (/* binding */ mapArch),
-/* harmony export */   "eG": () => (/* binding */ mapOS),
-/* harmony export */   "s9": () => (/* binding */ getRunnerSpecs),
-/* harmony export */   "DG": () => (/* binding */ setBinaryInstallPath),
-/* harmony export */   "RK": () => (/* binding */ setInitPackageInstallPath),
-/* harmony export */   "sw": () => (/* binding */ setZarfBinaryUrl),
-/* harmony export */   "x1": () => (/* binding */ setupZarf)
-/* harmony export */ });
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_io__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(7436);
-/* harmony import */ var _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7784);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(7147);
-/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2037);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(1017);
+const setupZarf = __nccwpck_require__(9969);
 
-
-
-
-
-
-
-function mapArch(arch) {
-  const mappings = {
-    x64: "amd64"
-  };
-  return mappings[arch] || arch;
-}
-
-function mapOS(os) {
-  const mappings = {
-    darwin: "Darwin",
-    linux: "Linux",
-    win32: "Windows"
-  };
-  return mappings[os] || os;
-}
-
-function getRunnerSpecs() {
-  const arch = os__WEBPACK_IMPORTED_MODULE_4__.arch();
-  const homeDirectory = os__WEBPACK_IMPORTED_MODULE_4__.homedir();
-  const platform = os__WEBPACK_IMPORTED_MODULE_4__.platform();
-
-  return { 
-    arch,
-    homeDirectory,
-    platform
-  };
-}
-
-function setBinaryInstallPath(homeDirectory, version) {
-  const binPath = os__WEBPACK_IMPORTED_MODULE_4__.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
-  const installPath = path__WEBPACK_IMPORTED_MODULE_5__.join(homeDirectory, binPath);
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Zarf version ${ version } will be installed at ${ installPath }`);
-
-  return installPath;
-}
-
-function setInitPackageInstallPath(arch, homeDirectory, version) {
-  const tarball = `zarf-init-${ mapArch(arch) }-${ version }.tar.zst`;
-  const initPackagePath = path__WEBPACK_IMPORTED_MODULE_5__.join(homeDirectory, ".zarf", tarball);
-
-  return { 
-    tarball,
-    initPackagePath
-  };
-}
-
-function setZarfBinaryUrl(arch, platform, version) {
-  const exeSuffix = platform.startsWith("win") ? ".exe" : "";
-  const filename = `zarf_${ version }_${ mapOS(platform) }_${ mapArch(arch) }${ exeSuffix }`;
-
-  return `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ filename }`;
-}
-
-async function getZarfBinary(arch, installPath, platform, version) {
-  const binaryURL = setZarfBinaryUrl(platform, arch, version);
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Downloading the zarf binary from ${ binaryURL }...`);
-  const pathToBinary = await _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.downloadTool(binaryURL, installPath);
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Successfully downloaded ${ binaryURL }`);
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`The zarf binary is at ${ pathToBinary }`);
-  
-  return pathToBinary;
-}
-
-function addPermissionsToBinary(zarfBinary) {
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Adding read/write/execute permissions to the zarf binary...");
-  fs__WEBPACK_IMPORTED_MODULE_3__.chmodSync(zarfBinary, "700");
-}
-
-async function cacheZarfBinary(zarfBinary, version) {
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Caching the zarf binary...");
-  const binaryFile = os__WEBPACK_IMPORTED_MODULE_4__.platform().startsWith("win") ? "zarf.exe" : "zarf";
-  const toolName = "zarf";
-  const binCachedPath = await _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.cacheFile(zarfBinary, binaryFile, toolName, version);
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Cached the zarf binary at ${ binCachedPath }`);
-
-  return binCachedPath;
-}
-
-function addBinaryToPath(binCachedPath) {
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Adding ${ binCachedPath } to the $PATH...`);
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.addPath(binCachedPath);
-}
-
-async function getZarfInitPackage(initPackagePath, tarball, version) {
-  const initPackageURL = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ tarball }`;
-  const pathToInitPackage = await _actions_tool_cache__WEBPACK_IMPORTED_MODULE_2__.downloadTool(initPackageURL, initPackagePath);
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Successfully downloaded ${ initPackageURL }`);
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`The zarf init package is at ${ pathToInitPackage }`);
-
-  return {
-    pathToInitPackage,
-    initPackageURL
-  };
-}
-
-async function copyInitPackageToWorkingDir(pathToInitPackage) {
-  const workingDir = process.cwd();
-  await _actions_io__WEBPACK_IMPORTED_MODULE_1__.cp(pathToInitPackage, workingDir);
-}
-
-async function setupZarf(arch, binCachedPath, homeDirectory, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
-  try {
-    const version = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("version");
-    const downloadInitPackage = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("download-init-package");
-
-    getRunnerSpecs();
-    
-    if (downloadInitPackage === true) {
-      setInitPackageInstallPath(arch, homeDirectory, version);
-      await getZarfInitPackage(initPackagePath, tarball, version);
-      await copyInitPackageToWorkingDir(pathToInitPackage);
-    }
-
-    setBinaryInstallPath(homeDirectory, version);
-    const zarfBinary = (await getZarfBinary(arch, installPath, platform, version)).pathToBinary;
-    addPermissionsToBinary(zarfBinary);
-    await cacheZarfBinary(zarfBinary, version);
-    addBinaryToPath(binCachedPath);
-    
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("Zarf has been successfully installed/configured and is ready to use!");
-
-  } catch(error) {
-      _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
-  }
-}
-
-setupZarf();
+setupZarf;
 })();
 
-var __webpack_exports__getRunnerSpecs = __webpack_exports__.s9;
-var __webpack_exports__mapArch = __webpack_exports__.BG;
-var __webpack_exports__mapOS = __webpack_exports__.eG;
-var __webpack_exports__setBinaryInstallPath = __webpack_exports__.DG;
-var __webpack_exports__setInitPackageInstallPath = __webpack_exports__.RK;
-var __webpack_exports__setZarfBinaryUrl = __webpack_exports__.sw;
-var __webpack_exports__setupZarf = __webpack_exports__.x1;
-export { __webpack_exports__getRunnerSpecs as getRunnerSpecs, __webpack_exports__mapArch as mapArch, __webpack_exports__mapOS as mapOS, __webpack_exports__setBinaryInstallPath as setBinaryInstallPath, __webpack_exports__setInitPackageInstallPath as setInitPackageInstallPath, __webpack_exports__setZarfBinaryUrl as setZarfBinaryUrl, __webpack_exports__setupZarf as setupZarf };
-
+module.exports = __webpack_exports__;
+/******/ })()
+;
 //# sourceMappingURL=index.js.map
