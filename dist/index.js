@@ -107,6 +107,8 @@ async function setupZarf(arch, binaryURL, binCachedPath, initPackagePath, initPa
     const downloadInitPackage = core.getBooleanInput("download-init-package");
     
     if (downloadInitPackage === true) {
+      core.debug(`Is ${ tarball } defined or undefined`);
+      core.info(`Downloading the zarf init package from ${ initPackageURL }...`);
       await getZarfInitPackage(initPackagePath, tarball, version);
       core.info(`Successfully downloaded ${ initPackageURL }`);
       core.info(`The zarf init package is at ${ pathToInitPackage }`);
