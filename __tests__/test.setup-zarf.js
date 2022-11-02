@@ -1,5 +1,5 @@
-import os from "os";
-import * as setup from "../lib/setup-zarf.js";
+const os = require("os");
+const setup = require("../lib/setup-zarf.js");
 
 test("Map for runner architecture", () => {
     expect(setup.mapArch("x64")).toBe("amd64")
