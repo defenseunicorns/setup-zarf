@@ -116,6 +116,7 @@ export async function setupZarf(arch, binCachedPath, homeDirectory, initPackageP
       await copyInitPackageToWorkingDir(pathToInitPackage);
     }
 
+    setBinaryInstallPath(homeDirectory, version);
     const zarfBinary = (await getZarfBinary(arch, installPath, platform, version)).pathToBinary;
     addPermissionsToBinary(zarfBinary);
     await cacheZarfBinary(zarfBinary, version);
