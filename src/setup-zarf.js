@@ -105,12 +105,13 @@ async function copyInitPackageToWorkingDir(pathToInitPackage) {
   await io.cp(pathToInitPackage, workingDir);
 }
 
-export async function setupZarf(arch, binCachedPath, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
+export async function setupZarf(arch, binCachedPath, homeDirectory, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
   try {
     const version = core.getInput("version");
     const downloadInitPackage = core.getBooleanInput("download-init-package");
     
     if (downloadInitPackage === true) {
+      setInitPackageInstallPath(arch, homeDirectory, version);
       await getZarfInitPackage(initPackagePath, tarball, version);
       await copyInitPackageToWorkingDir(pathToInitPackage);
     }

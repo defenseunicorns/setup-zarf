@@ -6791,12 +6791,13 @@ async function copyInitPackageToWorkingDir(pathToInitPackage) {
   await _actions_io__WEBPACK_IMPORTED_MODULE_1__.cp(pathToInitPackage, workingDir);
 }
 
-async function setupZarf(arch, binCachedPath, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
+async function setupZarf(arch, binCachedPath, homeDirectory, initPackagePath, installPath, pathToInitPackage, platform, tarball) {
   try {
     const version = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("version");
     const downloadInitPackage = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput("download-init-package");
     
     if (downloadInitPackage === true) {
+      setInitPackageInstallPath(arch, homeDirectory, version);
       await getZarfInitPackage(initPackagePath, tarball, version);
       await copyInitPackageToWorkingDir(pathToInitPackage);
     }
