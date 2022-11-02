@@ -1,4 +1,4 @@
-const { setupZarf } = require("./lib/setup-zarf");
+import { setupZarf } from "./setup-zarf";
 
 async function execute() {
     await setupZarf();
