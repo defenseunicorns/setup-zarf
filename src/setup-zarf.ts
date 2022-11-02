@@ -5,6 +5,8 @@ import { chmodSync } from "fs";
 import * as os from "os";
 import { join } from "path";
 
+export const zarfFileName = __filename;
+
 export function mapArch() {
   let archMap = new Map();
   archMap.set("x64", "amd64");
@@ -26,7 +28,21 @@ export function mapOS() {
   return { macMap, linuxMap, windowsMap };
 }
 
-export async function setupZarf() {
+function getRunnerPlatform(version: string) {
+  let filename = "";
+
+  if (os.platform() === "darwin") {
+    filename = `zarf_${ version }_${ mapOS().macMap }_${ mapArch() }`;
+  } else if (os.platform() === "linux") {
+    filename = `zarf_${ version }_${ mapOS().linuxMap }_${ mapArch() }`;
+  } else if (os.platform() === "win32") {
+    filename = `zarf_${ version }_${ mapOS().windowsMap }_${ mapArch() }`;
+  }
+
+  return filename;
+}
+
+export async function setupZarf(zarfFileName: string) {
   try {
     // Get user input
     const version = core.getInput("version");
@@ -43,8 +59,8 @@ export async function setupZarf() {
 
     // Download zarf binary
     const exeSuffix = os.platform().startsWith("win") ? ".exe" : "";
-    const filename = `zarf_${ version }_${ mapOS() }_${ mapArch() }${ exeSuffix }`;
-    const binaryURL = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ filename }`;
+    const binary = zarfFileName + exeSuffix;
+    const binaryURL = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ binary }`;
     const binPath = os.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
     const installPath = join(os.homedir(), binPath);
     const zarfBinary = await tc.downloadTool(binaryURL, installPath);
