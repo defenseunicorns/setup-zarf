@@ -77,8 +77,6 @@ export async function setupZarf(runnerPlatform: string) {
       
       core.info("Zarf has been successfully installed/configured and is ready to use!");
 
-      return version;
-
     } catch(error) {
         let errorMessage: string = "Failed to setup Zarf";
         if (error instanceof Error) {
