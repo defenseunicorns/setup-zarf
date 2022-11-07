@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   test:
-    name: Test
+    name: Cross-platform Test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -25,7 +25,9 @@ jobs:
       run: npm test
       shell: bash
 
+  scan:
     - name: Scan current project
+      needs: test
       uses: anchore/scan-action@v3
       id: scan
       with:
