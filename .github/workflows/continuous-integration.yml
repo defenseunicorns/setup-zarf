@@ -30,45 +30,43 @@ jobs:
       run: npm test
       shell: bash
 
-  scan:
-    name: Scan current project directory
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: anchore/scan-action@v3
-        id: scan
-        with:
-          path: "."
-          fail-build: true
-          severity-cutoff: critical
+    - name: Scan current project directory
+      runs-on: ubuntu-latest
+      steps:
+        - uses: anchore/scan-action@v3
+          id: scan
+          with:
+            path: "."
+            fail-build: true
+            severity-cutoff: critical
     
-      - name: Inspect action SARIF report
-        run: cat ${{ steps.scan.outputs.sarif }}
+    - name: Inspect action SARIF report
+      run: cat ${{ steps.scan.outputs.sarif }}
 
-      - name: Upload Anchore scan SARIF report for viewing 
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
+    - name: Upload Anchore scan SARIF report for viewing 
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: ${{ steps.scan.outputs.sarif }}
 
-      - name: Upload Grype scan results as an artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: AnchoreReports
-          path: ./anchore-reports/
+    - name: Upload Grype scan results as an artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Grype Report
+        path: ${{ steps.scan.outputs.sarif }}
 
-      - name: Set commit short sha var as output
-        id: short-sha-var
-        run: echo "short-sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    - name: Set commit short sha var as output
+      id: short-sha-var
+      run: GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c1-7)
 
-      - name: Create SBOM
-        uses: anchore/sbom-action@v0
-        with:
-          format: spdx-json
-          output-file: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.short-sha }}-sbom.spdx.json"
+    - name: Create SBOM
+      uses: anchore/sbom-action@v0
+      with:
+        format: spdx-json
+        output-file: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.GITHUB_SHA_SHORT }}-sbom.spdx.json"
 
-      - name: Scan SBOM
-        uses: anchore/scan-action@v3
-        with:
-          sbom: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.short-sha }}-sbom.spdx.json"
-          fail-build: true
-          severity-cutoff: critical
+    - name: Scan SBOM
+      uses: anchore/scan-action@v3
+      with:
+        sbom: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.short-sha }}-sbom.spdx.json"
+        fail-build: true
+        severity-cutoff: critical
