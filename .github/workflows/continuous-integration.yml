@@ -50,7 +50,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Grype Report
-        path: ${{ steps.scan.outputs }}
+        path: ${{ steps.scan.outputs.sarif }}
 
     - name: Set commit short sha var as output
       id: short-sha-var
