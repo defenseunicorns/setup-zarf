@@ -1,6 +1,9 @@
 name: 'Setup Zarf'
 
 on: pull_request
+  push:
+    branches:
+      - main
 
 jobs:
   setup-zarf:
