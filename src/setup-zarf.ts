@@ -1,23 +1,29 @@
-import * as core from "@actions/core";
+import {
+    addPath,
+    getBooleanInput,
+    getInput,
+    info,
+    setFailed
+} from "@actions/core";
 import { cp } from "@actions/io";
-import * as tc from "@actions/tool-cache";
+import { cacheFile, downloadTool } from "@actions/tool-cache";
 import { chmodSync } from "fs";
-import * as os from "os";
+import { homedir, platform } from "os";
 import { join } from "path";
 
-let platform: string = ""
+let operatingSystem: string = ""
 
-if (os.platform() === "darwin") {
-  platform = `${ mapOS().macMap }_${ mapArch() }`
+if (platform() === "darwin") {
+  operatingSystem = `${ mapOS().macMap }_${ mapArch() }`;
 
-} else if (os.platform() === "linux") {
-  platform = `${ mapOS().linuxMap }_${ mapArch() }`;
+} else if (platform() === "linux") {
+  operatingSystem = `${ mapOS().linuxMap }_${ mapArch() }`;
 
-} else if (os.platform() === "win32") {
-  platform = `${ mapOS().windowsMap }_${ mapArch() }`;
+} else if (platform() === "win32") {
+  operatingSystem = `${ mapOS().windowsMap }_${ mapArch() }`;
 }
 
-export const runnerPlatform: string = platform;
+export const runnerPlatform: string = operatingSystem;
 
 export function mapArch() {
     let archMap = new Map();
@@ -43,45 +49,45 @@ export function mapOS() {
 export async function setupZarf(runnerPlatform: string) {
     try {
       // Get user input
-      const version: string = core.getInput("version");
-      const downloadInitPackage: boolean = core.getBooleanInput("download-init-package");
+      const version: string = getInput("version");
+      const downloadInitPackage: boolean = getBooleanInput("download-init-package");
       
       // Download init package
       if (downloadInitPackage === true) {
         const tarball: string = `zarf-init-${ mapArch() }-${ version }.tar.zst`;
-        const initPackagePath: string = join(os.homedir(), ".zarf", tarball);
+        const initPackagePath: string = join(homedir(), ".zarf", tarball);
         const initPackageURL: string = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ tarball }`;
-        const pathToInitPackage: string = await tc.downloadTool(initPackageURL, initPackagePath);
+        const pathToInitPackage: string = await downloadTool(initPackageURL, initPackagePath);
         await cp(pathToInitPackage, process.cwd());
       }
 
       // Download zarf binary
       const exePrefix: string = `zarf_${ version }_`
-      const exeSuffix: string = os.platform().startsWith("win") ? ".exe" : "";
+      const exeSuffix: string = platform().startsWith("win") ? ".exe" : "";
       const binary: string = exePrefix + runnerPlatform + exeSuffix;
       const binaryURL: string = `https://github.com/defenseunicorns/zarf/releases/download/${ version }/${ binary }`;
-      const binPath: string = os.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
-      const installPath: string = join(os.homedir(), binPath);
-      const zarfBinary: string = await tc.downloadTool(binaryURL, installPath);
+      const binPath: string = platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
+      const installPath: string = join(homedir(), binPath);
+      const zarfBinary: string = await downloadTool(binaryURL, installPath);
 
       // Add read/write/execute permissions to binary
       chmodSync(zarfBinary, "700");
       
       // Cache the zarf binary
-      const binaryFile: string = os.platform().startsWith("win") ? "zarf.exe" : "zarf";
+      const binaryFile: string = platform().startsWith("win") ? "zarf.exe" : "zarf";
       const toolName: string = "zarf";
-      const binCachedPath: string = await tc.cacheFile(zarfBinary, binaryFile, toolName, version);
+      const binCachedPath: string = await cacheFile(zarfBinary, binaryFile, toolName, version);
 
       // Add binary to the $PATH
-      core.addPath(binCachedPath);
+      addPath(binCachedPath);
       
-      core.info("Zarf has been successfully installed/configured and is ready to use!");
+      info("Zarf has been successfully installed/configured and is ready to use!");
 
     } catch(error) {
         let errorMessage: string = "Failed to setup Zarf";
         if (error instanceof Error) {
           errorMessage = error.message;
         }
-        core.setFailed(errorMessage);
+        setFailed(errorMessage);
     }
 }

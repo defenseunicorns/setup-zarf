@@ -6535,29 +6535,6 @@ execute();
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -6569,23 +6546,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setupZarf = exports.mapOS = exports.mapArch = exports.runnerPlatform = void 0;
-const core = __importStar(__nccwpck_require__(2186));
+const core_1 = __nccwpck_require__(2186);
 const io_1 = __nccwpck_require__(7436);
-const tc = __importStar(__nccwpck_require__(7784));
+const tool_cache_1 = __nccwpck_require__(7784);
 const fs_1 = __nccwpck_require__(7147);
-const os = __importStar(__nccwpck_require__(2037));
+const os_1 = __nccwpck_require__(2037);
 const path_1 = __nccwpck_require__(1017);
-let platform = "";
-if (os.platform() === "darwin") {
-    platform = `${mapOS().macMap}_${mapArch()}`;
+let operatingSystem = "";
+if ((0, os_1.platform)() === "darwin") {
+    operatingSystem = `${mapOS().macMap}_${mapArch()}`;
 }
-else if (os.platform() === "linux") {
-    platform = `${mapOS().linuxMap}_${mapArch()}`;
+else if ((0, os_1.platform)() === "linux") {
+    operatingSystem = `${mapOS().linuxMap}_${mapArch()}`;
 }
-else if (os.platform() === "win32") {
-    platform = `${mapOS().windowsMap}_${mapArch()}`;
+else if ((0, os_1.platform)() === "win32") {
+    operatingSystem = `${mapOS().windowsMap}_${mapArch()}`;
 }
-exports.runnerPlatform = platform;
+exports.runnerPlatform = operatingSystem;
 function mapArch() {
     let archMap = new Map();
     archMap.set("x64", "amd64");
@@ -6608,41 +6585,40 @@ function setupZarf(runnerPlatform) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // Get user input
-            const version = core.getInput("version");
-            const downloadInitPackage = core.getBooleanInput("download-init-package");
+            const version = (0, core_1.getInput)("version");
+            const downloadInitPackage = (0, core_1.getBooleanInput)("download-init-package");
             // Download init package
             if (downloadInitPackage === true) {
                 const tarball = `zarf-init-${mapArch()}-${version}.tar.zst`;
-                const initPackagePath = (0, path_1.join)(os.homedir(), ".zarf", tarball);
+                const initPackagePath = (0, path_1.join)((0, os_1.homedir)(), ".zarf", tarball);
                 const initPackageURL = `https://github.com/defenseunicorns/zarf/releases/download/${version}/${tarball}`;
-                const pathToInitPackage = yield tc.downloadTool(initPackageURL, initPackagePath);
+                const pathToInitPackage = yield (0, tool_cache_1.downloadTool)(initPackageURL, initPackagePath);
                 yield (0, io_1.cp)(pathToInitPackage, process.cwd());
             }
             // Download zarf binary
             const exePrefix = `zarf_${version}_`;
-            const exeSuffix = os.platform().startsWith("win") ? ".exe" : "";
+            const exeSuffix = (0, os_1.platform)().startsWith("win") ? ".exe" : "";
             const binary = exePrefix + runnerPlatform + exeSuffix;
             const binaryURL = `https://github.com/defenseunicorns/zarf/releases/download/${version}/${binary}`;
-            const binPath = os.platform().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
-            const installPath = (0, path_1.join)(os.homedir(), binPath);
-            const zarfBinary = yield tc.downloadTool(binaryURL, installPath);
+            const binPath = (0, os_1.platform)().startsWith("win") ? ".zarf\\bin\\zarf.exe" : ".zarf/bin/zarf";
+            const installPath = (0, path_1.join)((0, os_1.homedir)(), binPath);
+            const zarfBinary = yield (0, tool_cache_1.downloadTool)(binaryURL, installPath);
             // Add read/write/execute permissions to binary
             (0, fs_1.chmodSync)(zarfBinary, "700");
             // Cache the zarf binary
-            const binaryFile = os.platform().startsWith("win") ? "zarf.exe" : "zarf";
+            const binaryFile = (0, os_1.platform)().startsWith("win") ? "zarf.exe" : "zarf";
             const toolName = "zarf";
-            const binCachedPath = yield tc.cacheFile(zarfBinary, binaryFile, toolName, version);
+            const binCachedPath = yield (0, tool_cache_1.cacheFile)(zarfBinary, binaryFile, toolName, version);
             // Add binary to the $PATH
-            core.addPath(binCachedPath);
-            core.info("Zarf has been successfully installed/configured and is ready to use!");
-            return version;
+            (0, core_1.addPath)(binCachedPath);
+            (0, core_1.info)("Zarf has been successfully installed/configured and is ready to use!");
         }
         catch (error) {
             let errorMessage = "Failed to setup Zarf";
             if (error instanceof Error) {
                 errorMessage = error.message;
             }
-            core.setFailed(errorMessage);
+            (0, core_1.setFailed)(errorMessage);
         }
     });
 }
