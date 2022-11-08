@@ -45,20 +45,30 @@ jobs:
       - name: Inspect action SARIF report
         run: cat ${{ steps.scan.outputs.sarif }}
 
-      - name: Upload Anchore scan SARIF report
+      - name: Upload Anchore scan SARIF report for viewing 
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
+
+      - name: Upload Grype scan results as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: AnchoreReports
+          path: ./anchore-reports/
+
+      - name: Set commit short sha var as output
+        id: short-sha-var
+        run: echo "short-sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Create SBOM
         uses: anchore/sbom-action@v0
         with:
           format: spdx-json
-          output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
+          output-file: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.short-sha }}-sbom.spdx.json"
 
       - name: Scan SBOM
         uses: anchore/scan-action@v3
         with:
-          sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
+          sbom: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.short-sha }}-sbom.spdx.json"
           fail-build: true
           severity-cutoff: critical
