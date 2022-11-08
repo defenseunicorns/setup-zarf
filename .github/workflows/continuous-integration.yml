@@ -56,13 +56,13 @@ jobs:
         output-format: json
     
     - name: Inspect action json report
-      run: cat ${{ steps.scan.outputs.json }}
+      run: cat results.json
 
     - name: Upload Grype scan results as an artifact
       uses: actions/upload-artifact@v3
       with:
         name: Grype Report
-        path: ${{ steps.scan.outputs.json }}
+        path: ./results.json
 
     - name: Create SBOM
       uses: anchore/sbom-action@v0
