@@ -31,14 +31,12 @@ jobs:
       shell: bash
 
     - name: Scan current project directory
-      runs-on: ubuntu-latest
-      steps:
-        - uses: anchore/scan-action@v3
-          id: scan
-          with:
-            path: "."
-            fail-build: true
-            severity-cutoff: critical
+      uses: anchore/scan-action@v3
+      id: scan
+      with:
+        path: "."
+        fail-build: true
+        severity-cutoff: critical
     
     - name: Inspect action SARIF report
       run: cat ${{ steps.scan.outputs.sarif }}
@@ -52,7 +50,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Grype Report
-        path: ${{ steps.scan.outputs.sarif }}
+        path: ${{ steps.scan.outputs }}
 
     - name: Set commit short sha var as output
       id: short-sha-var
@@ -62,11 +60,11 @@ jobs:
       uses: anchore/sbom-action@v0
       with:
         format: spdx-json
-        output-file: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.GITHUB_SHA_SHORT }}-sbom.spdx.json"
+        output-file: "${{ github.event.repository.name }}-${{ steps.short-sha-var.env.GITHUB_SHA_SHORT }}-sbom.spdx.json"
 
     - name: Scan SBOM
       uses: anchore/scan-action@v3
       with:
-        sbom: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.short-sha }}-sbom.spdx.json"
+        sbom: "${{ github.event.repository.name }}-${{ steps.short-sha-var.env.GITHUB_SHA_SHORT }}-sbom.spdx.json"
         fail-build: true
         severity-cutoff: critical
