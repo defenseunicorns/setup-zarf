@@ -53,8 +53,9 @@ jobs:
         path: "."
         fail-build: true
         severity-cutoff: high
+        output-format: json
     
-    - name: Inspect action SARIF report
+    - name: Inspect action json report
       run: cat ${{ steps.scan.outputs.json }}
 
     - name: Upload Grype scan results as an artifact
