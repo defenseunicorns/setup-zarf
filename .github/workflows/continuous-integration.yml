@@ -8,13 +8,12 @@ on:
       - main
 
 jobs:
-  test:
-    name: Test
-    runs-on: ${{ matrix.os }}
+  test-cross-platform:
+    name: Cross-platform Test
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
 
@@ -29,3 +28,51 @@ jobs:
     - name: Test
       run: npm test
       shell: bash
+
+  ubuntu-scan:
+    name: ubuntu
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+
+    - name: Install Package Dependencies
+      run: npm ci
+
+    - name: Scan current project directory
+      uses: anchore/scan-action@v3
+      id: scan
+      with:
+        path: "."
+        fail-build: true
+        severity-cutoff: high
+        output-format: json
+    
+    - name: Inspect action json report
+      run: cat results.json
+
+    - name: Upload Grype scan results as an artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Grype Report
+        path: ./results.json
+
+    - name: Create SBOM
+      uses: anchore/sbom-action@v0
+      with:
+        format: spdx-json
+        output-file: "${{ github.event.repository.name }}-${{ github.sha }}-sbom.spdx.json"
+
+    - name: Scan SBOM
+      uses: anchore/scan-action@v3
+      with:
+        sbom: "${{ github.event.repository.name }}-${{ github.sha }}-sbom.spdx.json"
+        fail-build: true
+        severity-cutoff: high

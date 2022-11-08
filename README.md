@@ -64,3 +64,5 @@ This project utilizes a static code analysis tool called [eslint](https://eslint
 When changes are made to the javascript source code, run `npm run all` to execute `eslint` against the code and recompile the code into the `dist/index.js` file.
 
 &nbsp;
+
+
