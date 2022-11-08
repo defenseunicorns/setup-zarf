@@ -77,17 +77,17 @@ jobs:
       run: |
         GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c1-7)
         echo "Commit short sha value: " $GITHUB_SHA_SHORT
-        echo "{GITHUB_SHA_SHORT}={$GITHUB_SHA_SHORT}" >> $GITHUB_ENV
+        echo "{GITHUB_SHA_SHORT}={$GITHUB_SHA_SHORT}" >> $GITHUB_OUTPUT
 
     - name: Create SBOM
       uses: anchore/sbom-action@v0
       with:
         format: spdx-json
-        output-file: "${{ github.event.repository.name }}-${{ env.GITHUB_SHA_SHORT }}-sbom.spdx.json"
+        output-file: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.GITHUB_SHA_SHORT }}-sbom.spdx.json"
 
     - name: Scan SBOM
       uses: anchore/scan-action@v3
       with:
-        sbom: "${{ github.event.repository.name }}-${{ env.GITHUB_SHA_SHORT }}-sbom.spdx.json"
+        sbom: "${{ github.event.repository.name }}-${{ steps.short-sha-var.outputs.GITHUB_SHA_SHORT }}-sbom.spdx.json"
         fail-build: true
         severity-cutoff: critical
