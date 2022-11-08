@@ -32,6 +32,7 @@ jobs:
 
     - name: Scan current project directory
       uses: anchore/scan-action@v3
+      runs-on: ubuntu-latest
       id: scan
       with:
         path: "."
