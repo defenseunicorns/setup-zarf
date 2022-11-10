@@ -1,12 +1,65 @@
-name: 'Setup Zarf'
-description: 'GitHub Action for Installing Zarf'
+name: "Setup Zarf"
+description: "Installs Zarf and includes the Zarf CLI in the PATH"
 inputs:
   version:
-    description: 'The Version of Zarf to Install'
+    description: "The version of Zarf to install. Use v0.22.2 for example."
     required: true
   download-init-package:
-    description: 'Download Zarf Init Package'
+    description: "Download the corresponding Zarf init package."
     required: true
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        #!/bin/bash
+        # Base url for zarf release artifacts
+        release_path="https://github.com/defenseunicorns/zarf/releases/download/${{ inputs.version }}"
+
+        # Set the architecture variable
+        case ${{ runner.arch }} in
+          X64)
+            arch="amd64"
+            ;;
+          ARM64)
+            arch="arm64"
+            ;;
+          *)
+            echo "Unsupported architecture X64"
+            exit 1
+            ;;
+        esac
+
+        # Set the filename variable
+        case  ${{ runner.os }} in
+          Linux)
+            filename="Linux_${arch}"
+            ;;
+          macOS)
+            filename="Darwin_${arch}"
+            ;;
+          Windows)
+            filename="Windows_${arch}.exe"
+            ;;
+          *)
+            echo "Unsupported OS"
+            exit 1
+            ;;
+        esac
+
+        echo "Downloading Zarf '${{ inputs.version }}' for ${{ runner.os }} ${{ runner.arch }}"
+        curl -sL "${release_path}/zarf_${{ inputs.version }}_${filename}" -o zarf
+        chmod +x zarf
+
+        if "${{ inputs.download-init-package }}" == "true"; then
+          echo "Downloading Zarf init package '${{ inputs.version }}' for ${{ runner.os }} ${{ runner.arch }}"
+          curl -sL "${release_path}/zarf-init-amd64-${{ inputs.version }}.tar.zst" -o "zarf-init-${arch}-${{ inputs.version }}.tar.zst"
+        fi
+
+    - if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
+      run: echo "${{ runner.temp }}" >> $GITHUB_PATH
+      shell: bash
+
+    - if: ${{ runner.os == 'Windows' }}
+      run: echo "${{ runner.temp }}" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: pwsh
