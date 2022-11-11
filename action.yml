@@ -14,7 +14,6 @@ runs:
       run: |
         #!/bin/bash
         # Base url for zarf release artifacts
-        release_path="https://github.com/defenseunicorns/zarf/releases/download/${{ inputs.version }}"
         target_dir="${HOME}/.zarf-cache"
         version="${{ inputs.version }}"
 
@@ -22,6 +21,8 @@ runs:
         if [ -z "${version}" ]; then
           version=$(curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | sed 's/^location:.*\/v/v/')
         fi
+        
+        release_path="https://github.com/defenseunicorns/zarf/releases/download/${version}"
 
         mkdir -p $target_dir
 
