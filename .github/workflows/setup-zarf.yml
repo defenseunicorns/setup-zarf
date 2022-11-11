@@ -8,6 +8,17 @@ on:
       - main
 
 jobs:
+  test-defaults:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Zarf with defaults
+        uses: ./
+
+      - name: Verify Zarf version
+        run: zarf version
+
   setup-zarf:
     runs-on: ubuntu-latest
     name: Setup Zarf

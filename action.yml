@@ -1,12 +1,12 @@
 name: "Setup Zarf"
 description: "Installs Zarf and includes the Zarf CLI in the PATH"
+
 inputs:
   version:
-    description: "The version of Zarf to install. Use v0.22.2 for example."
-    required: true
+    description: "The version of Zarf to install. Use v0.22.2 for example. Uses the latest version if not specified."
   download-init-package:
     description: "Download the corresponding Zarf init package."
-    required: true
+
 runs:
   using: "composite"
   steps:
@@ -16,6 +16,12 @@ runs:
         # Base url for zarf release artifacts
         release_path="https://github.com/defenseunicorns/zarf/releases/download/${{ inputs.version }}"
         target_dir="${HOME}/.zarf-cache"
+        version="${{ inputs.version }}"
+
+        # Use latest version if not specified
+        if [ -z "${version}" ]; then
+          version=$(curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | sed 's/^location:.*\/v/v/')
+        fi
 
         mkdir -p $target_dir
 
@@ -51,15 +57,15 @@ runs:
             ;;
         esac
 
-        echo "Downloading Zarf ${{ inputs.version }} for ${{ runner.os }} ${arch}"
-        curl -sL "${release_path}/zarf_${{ inputs.version }}_${filename}" -o "${target_dir}/zarf${suffix}"
+        echo "Downloading Zarf ${version} for ${{ runner.os }} ${arch}"
+        curl -sL "${release_path}/zarf_${version}_${filename}" -o "${target_dir}/zarf${suffix}"
 
         # Make the file executable if it's not a Windows binary
         [ "${{ runner.os }}" == "Windows" ] || chmod +x "${target_dir}/zarf"
 
         if [ "${{ inputs.download-init-package }}" == "true" ]; then
-          echo "Downloading Zarf init package ${{ inputs.version }} for ${{ runner.os }} ${arch}"
-          curl -sL "${release_path}/zarf-init-${arch}-${{ inputs.version }}.tar.zst" -o "${target_dir}/zarf-init-${arch}-${{ inputs.version }}.tar.zst"
+          echo "Downloading Zarf init package ${version} for ${{ runner.os }} ${arch}"
+          curl -sL "${release_path}/zarf-init-${arch}-${version}.tar.zst" -o "${target_dir}/zarf-init-${arch}-${version}.tar.zst"
         fi
 
     - if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
