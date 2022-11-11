@@ -37,8 +37,6 @@ jobs:
 
 ## Complete example: package create, cluster init, package deploy
 
-````yaml
-
 ```yaml
 jobs:
   deploy_package:
@@ -64,7 +62,7 @@ jobs:
           curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
           k3d cluster delete && k3d cluster create
 
-      - name: Initaialize the cluster
+      - name: Initialize the cluster
         run: zarf init --confirm
 
       - name: Deploy the package
