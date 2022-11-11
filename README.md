@@ -22,7 +22,7 @@ jobs:
 
     name: Create my cool Zarf Package
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -44,7 +44,7 @@ jobs:
 
     name: Create & deploy my cool Zarf Package
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -70,7 +70,7 @@ jobs:
 
       - name: View the deployed package
         run: zarf package list
-````
+```
 
 #
 

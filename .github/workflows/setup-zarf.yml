@@ -1,8 +1,8 @@
-name: 'Setup Zarf'
+name: "Setup Zarf"
 
 on:
   pull_request:
-    types: [ assigned, opened, synchronize, reopened ]
+    types: [assigned, opened, synchronize, reopened]
   push:
     branches:
       - main
@@ -26,12 +26,15 @@ jobs:
 
       - name: Create k3d Cluster
         run: |
-            curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-            k3d --version
-            k3d cluster create
+          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+          k3d --version
+          k3d cluster create
 
       - name: Zarf Init
         run: zarf init --confirm
+
+      - name: Deploy DOS Games
+        run: zarf package deploy sget://defenseunicorns/zarf-hello-world:$(uname -m) --confirm
 
       - name: List installed packages
         run: zarf package list
