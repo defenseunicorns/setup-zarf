@@ -19,7 +19,7 @@ runs:
 
         # Use latest version if not specified
         if [ -z "${version}" ]; then
-          version=$(curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | sed 's/^location:.*\/v/v/')
+          version=$(curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | grep -Eo 'v\d+.\d+.\d+')
         fi
         
         release_path="https://github.com/defenseunicorns/zarf/releases/download/${version}"
