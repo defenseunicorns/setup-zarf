@@ -34,7 +34,7 @@ runs:
         esac
 
         # Set the filename variable
-        case  ${{ runner.os }} in
+        case ${{ runner.os }} in
           Linux)
             filename="Linux_${arch}"
             ;;
@@ -51,15 +51,14 @@ runs:
             ;;
         esac
 
-        echo "Downloading Zarf '${{ inputs.version }}' for ${{ runner.os }} ${{ runner.arch }}"
+        echo "Downloading Zarf ${{ inputs.version }} for ${{ runner.os }} ${arch}"
         curl -sL "${release_path}/zarf_${{ inputs.version }}_${filename}" -o "${target_dir}/zarf${suffix}"
 
-        if "${{ runner.os }}" != "Windows"; then
-          chmod +x "${target_dir}/zarf"
-        fi
+        # Make the file executable if it's not a Windows binary
+        [ "${{ runner.os }}" == "Windows" ] || chmod +x "${target_dir}/zarf"
 
-        if "${{ inputs.download-init-package }}" == "true"; then
-          echo "Downloading Zarf init package '${{ inputs.version }}' for ${{ runner.os }} ${{ runner.arch }}"
+        if [ "${{ inputs.download-init-package }}" == "true" ]; then
+          echo "Downloading Zarf init package ${{ inputs.version }} for ${{ runner.os }} ${arch}"
           curl -sL "${release_path}/zarf-init-${arch}-${{ inputs.version }}.tar.zst" -o "${target_dir}/zarf-init-${arch}-${{ inputs.version }}.tar.zst"
         fi
 
