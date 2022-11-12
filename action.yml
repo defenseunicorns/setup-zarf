@@ -17,6 +17,9 @@ runs:
         target_dir="${HOME}/.zarf-cache"
         version="${{ inputs.version }}"
 
+        # Test these commands
+        curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | grep -Eo 'v\d+.\d+.\d+'
+
         # Use latest version if not specified
         if [ "${version}" == "" ]; then
           version=$(curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | grep -Eo 'v\d+.\d+.\d+')
