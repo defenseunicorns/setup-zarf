@@ -1,16 +1,33 @@
-name: 'Setup Zarf'
+name: "Setup Zarf"
 
 on:
+  schedule:
+    - cron: "0 4 * * *"
   pull_request:
-    types: [ assigned, opened, synchronize, reopened ]
+    types: [assigned, opened, synchronize, reopened]
   push:
     branches:
       - main
 
 jobs:
+  test-defaults:
+    name: Defaults config test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Zarf with defaults
+        uses: ./
+
+      - name: Verify Zarf version
+        run: zarf version
+
   setup-zarf:
+    name: Full test
     runs-on: ubuntu-latest
-    name: Setup Zarf
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -26,15 +43,15 @@ jobs:
 
       - name: Create k3d Cluster
         run: |
-            curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-            k3d --version
-            k3d cluster create
+          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+          k3d --version
+          k3d cluster create
 
       - name: Zarf Init
         run: zarf init --confirm
 
-      - name: Get Cluster Resources
-        run: |
-            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-            chmod +x ./kubectl
-            kubectl get all --all-namespaces
+      - name: Deploy DOS Games
+        run: zarf package deploy sget://defenseunicorns/zarf-hello-world:$(uname -m) --confirm
+
+      - name: List installed packages
+        run: zarf package list

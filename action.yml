@@ -1,12 +1,78 @@
-name: 'Setup Zarf'
-description: 'GitHub Action for Installing Zarf'
+name: "Setup Zarf"
+description: "Installs Zarf and includes the Zarf CLI in the PATH"
+
 inputs:
   version:
-    description: 'The Version of Zarf to Install'
-    required: true
+    description: "The version of Zarf to install. Use v0.22.2 for example. Uses the latest version if not specified."
   download-init-package:
-    description: 'Download Zarf Init Package'
-    required: true
+    description: "Download the corresponding Zarf init package."
+
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        #!/bin/bash
+        # Base url for zarf release artifacts
+        target_dir="${HOME}/.zarf-cache"
+        version="${{ inputs.version }}"
+
+        # Use latest version if not specified
+        if [ "${version}" == "" ]; then
+          version=$(curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | grep -Eo 'v[0-9]+.[0-9]+.[0-9]+')
+        fi
+
+        release_path="https://github.com/defenseunicorns/zarf/releases/download/${version}"
+
+        mkdir -p $target_dir
+
+        # Set the architecture variable
+        case ${{ runner.arch }} in
+          X64)
+            arch="amd64"
+            ;;
+          ARM64)
+            arch="arm64"
+            ;;
+          *)
+            echo "Unsupported architecture, only X64 and ARM64 are supported."
+            exit 1
+            ;;
+        esac
+
+        # Set the filename variable
+        case ${{ runner.os }} in
+          Linux)
+            filename="Linux_${arch}"
+            ;;
+          macOS)
+            filename="Darwin_${arch}"
+            ;;
+          Windows)
+            filename="Windows_${arch}.exe"
+            suffix=".exe"
+            ;;
+          *)
+            echo "Unsupported OS type, only Linux, macOS, and Windows are supported."
+            exit 1
+            ;;
+        esac
+
+        echo "Downloading Zarf ${version} for ${{ runner.os }} ${arch}"
+        curl -sL "${release_path}/zarf_${version}_${filename}" -o "${target_dir}/zarf${suffix}"
+
+        # Make the file executable if it's not a Windows binary
+        [ "${{ runner.os }}" == "Windows" ] || chmod +x "${target_dir}/zarf"
+
+        if [ "${{ inputs.download-init-package }}" == "true" ]; then
+          echo "Downloading Zarf init package ${version} for ${{ runner.os }} ${arch}"
+          curl -sL "${release_path}/zarf-init-${arch}-${version}.tar.zst" -o "${target_dir}/zarf-init-${arch}-${version}.tar.zst"
+        fi
+
+    - if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
+      run: echo "${HOME}/.zarf-cache" >> $GITHUB_PATH
+      shell: bash
+
+    - if: ${{ runner.os == 'Windows' }}
+      run: echo "${HOME}/.zarf-cache" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: pwsh
