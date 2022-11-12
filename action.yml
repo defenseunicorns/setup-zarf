@@ -35,7 +35,7 @@ runs:
             arch="arm64"
             ;;
           *)
-            echo "Unsupported architecture X64"
+            echo "Unsupported architecture, only X64 and ARM64 are supported."
             exit 1
             ;;
         esac
@@ -53,7 +53,7 @@ runs:
             suffix=".exe"
             ;;
           *)
-            echo "Unsupported OS"
+            echo "Unsupported OS type, only Linux, macOS, and Windows are supported."
             exit 1
             ;;
         esac

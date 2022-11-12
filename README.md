@@ -9,8 +9,8 @@ This action will optionally download a Zarf init package. To learn more about Za
 ```yaml
 uses: defenseunicorns/setup-zarf@main
 with:
-  version: <version> # Required
-  download-init-package: true
+  version: <version> # Optional. Defaults to latest.
+  download-init-package: true # Optional. Defaults to false.
 ```
 
 ## Example Package Create
@@ -78,7 +78,8 @@ jobs:
 
 ### version
 
-- Required
+- Optional
+- Default: latest release
 - **_Note:_** Include the `v` in your version (e.g., `v0.22.2`)
 - Check out the [Zarf releases page](https://github.com/defenseunicorns/zarf/releases) to see available versions
 
