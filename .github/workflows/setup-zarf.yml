@@ -27,12 +27,7 @@ jobs:
 
   setup-zarf:
     name: Full test
-    strategy:
-      matrix:
-        # Only test on Linux/Windows due to lack of docker support for github actions Mac
-        # https://github.com/orgs/community/discussions/25777
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
