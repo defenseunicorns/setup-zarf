@@ -12,13 +12,22 @@ runs:
   steps:
     - shell: bash
       run: |
+        curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest
+    
+    - shell: bash
+      run: |
+        curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location:
+    
+    - shell: bash
+      run: |
+        curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | grep -Eo 'v\d+.\d+.\d+'
+    
+    - shell: bash
+      run: |
         #!/bin/bash
         # Base url for zarf release artifacts
         target_dir="${HOME}/.zarf-cache"
         version="${{ inputs.version }}"
-
-        # Test these commands
-        curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | grep -Eo 'v\d+.\d+.\d+'
 
         # Use latest version if not specified
         if [ "${version}" == "" ]; then
