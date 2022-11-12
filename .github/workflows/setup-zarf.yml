@@ -29,7 +29,9 @@ jobs:
     name: Full test
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        # Only test on Linux/Windows due to lack of docker support for github actions Mac
+        # https://github.com/orgs/community/discussions/25777
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
