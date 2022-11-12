@@ -12,18 +12,6 @@ runs:
   steps:
     - shell: bash
       run: |
-        curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest
-    
-    - shell: bash
-      run: |
-        curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location:
-    
-    - shell: bash
-      run: |
-        curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | grep -Eo 'v[0-9]+.[0-9]+.[0-9]+'
-    
-    - shell: bash
-      run: |
         #!/bin/bash
         # Base url for zarf release artifacts
         target_dir="${HOME}/.zarf-cache"
@@ -33,7 +21,7 @@ runs:
         if [ "${version}" == "" ]; then
           version=$(curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | grep -Eo 'v[0-9]+.[0-9]+.[0-9]+')
         fi
-        
+
         release_path="https://github.com/defenseunicorns/zarf/releases/download/${version}"
 
         mkdir -p $target_dir
