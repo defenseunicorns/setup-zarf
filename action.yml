@@ -18,7 +18,7 @@ runs:
         version="${{ inputs.version }}"
 
         # Use latest version if not specified
-        if [ -z "${version}" ]; then
+        if [ "${version}" == "" ]; then
           version=$(curl -sIX HEAD https://github.com/defenseunicorns/zarf/releases/latest | grep -i ^location: | grep -Eo 'v\d+.\d+.\d+')
         fi
         
