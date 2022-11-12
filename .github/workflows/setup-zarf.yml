@@ -9,7 +9,11 @@ on:
 
 jobs:
   test-defaults:
-    runs-on: ubuntu-latest
+    name: Cross Platform Defaults Test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
 
