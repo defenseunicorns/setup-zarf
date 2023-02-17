@@ -1,10 +1,9 @@
 name: "Setup Zarf"
 
 on:
-  # schedule:
-  #   - cron: "0 4 * * *"
+  schedule:
+    - cron: "0 4 * * *"
   pull_request:
-    # types: [assigned, opened, synchronize, reopened]
   push:
     branches:
       - main
