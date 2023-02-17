@@ -7,7 +7,7 @@ This action will optionally download a Zarf init package. To learn more about Za
 ## Usage
 
 ```yaml
-uses: defenseunicorns/setup-zarf@main
+uses: defenseunicorns/setup-zarf@v1
 with:
   version: <version> # Optional. Defaults to latest.
   download-init-package: true # Optional. Defaults to false.
@@ -27,9 +27,9 @@ jobs:
           fetch-depth: 1
 
       - name: Install Zarf
-        uses: defenseunicorns/setup-zarf@main
+        uses: defenseunicorns/setup-zarf@v1
         with:
-          version: v0.22.2
+          version: v0.24.2
 
       - name: Create the package
         run: zarf package create --confirm
@@ -49,9 +49,9 @@ jobs:
           fetch-depth: 1
 
       - name: Install Zarf
-        uses: defenseunicorns/setup-zarf@main
+        uses: defenseunicorns/setup-zarf@v1
         with:
-          version: v0.22.2
+          version: v0.24.2
           download-init-package: true
 
       - name: Create the package
@@ -80,7 +80,7 @@ jobs:
 
 - Optional
 - Default: latest release
-- **_Note:_** Include the `v` in your version (e.g., `v0.22.2`)
+- **_Note:_** Include the `v` in your version (e.g., `v0.24.2`)
 - Check out the [Zarf releases page](https://github.com/defenseunicorns/zarf/releases) to see available versions
 
 ### download-init-package
