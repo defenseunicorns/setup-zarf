@@ -29,7 +29,7 @@ jobs:
       - name: Install Zarf
         uses: defenseunicorns/setup-zarf@v1
         with:
-          version: v0.24.2
+          version: v0.24.3
 
       - name: Create the package
         run: zarf package create --confirm
@@ -51,7 +51,7 @@ jobs:
       - name: Install Zarf
         uses: defenseunicorns/setup-zarf@v1
         with:
-          version: v0.24.2
+          version: v0.24.3
           download-init-package: true
 
       - name: Create the package
@@ -80,7 +80,7 @@ jobs:
 
 - Optional
 - Default: latest release
-- **_Note:_** Include the `v` in your version (e.g., `v0.24.2`)
+- **_Note:_** Include the `v` in your version (e.g., `v0.24.3`)
 - Check out the [Zarf releases page](https://github.com/defenseunicorns/zarf/releases) to see available versions
 
 ### download-init-package

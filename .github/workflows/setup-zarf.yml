@@ -35,7 +35,7 @@ jobs:
         uses: ./
         with:
           download-init-package: true
-          version: v0.24.2
+          version: v0.24.3
 
       - name: Zarf Version
         run: zarf version

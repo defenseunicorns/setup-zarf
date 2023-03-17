@@ -3,7 +3,7 @@ description: "Installs Zarf and includes the Zarf CLI in the PATH"
 
 inputs:
   version:
-    description: "The version of Zarf to install. Use v0.22.2 for example. Uses the latest version if not specified."
+    description: "The version of Zarf to install. Uses the latest version if not specified."
   download-init-package:
     description: "Download the corresponding Zarf init package."
 
