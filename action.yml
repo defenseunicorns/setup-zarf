@@ -7,10 +7,17 @@ inputs:
   download-init-package:
     description: "Download the corresponding Zarf init package."
 
+outputs:
+  version:
+    description: |-
+      The version of Zarf that was installed, 
+    value: "${{ steps.install.outputs.version }}"
+
 runs:
   using: "composite"
   steps:
     - shell: bash
+      id: install
       run: |
         #!/bin/bash
         # Base url for zarf release artifacts
@@ -21,6 +28,8 @@ runs:
         if [ "${version}" == "" ]; then
           version=$(curl -sIX HEAD https://github.com/zarf-dev/zarf/releases/latest | grep -i ^location: | grep -Eo 'v[0-9]+.[0-9]+.[0-9]+')
         fi
+
+        echo "version=$(version)" >> "$GITHUB_OUTPUT"
 
         release_path="https://github.com/zarf-dev/zarf/releases/download/${version}"
 

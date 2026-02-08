@@ -87,3 +87,10 @@ jobs:
 
 - Optional
 - Default: `false`
+
+
+## Outputs
+
+### version
+
+- The version of Zarf installed by this action
